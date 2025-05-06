@@ -1,7 +1,10 @@
 #include "lib/jg_baselayer.h"
 
 #include "src/cogen/mccode.h"
-#include "src/cogen/mccogen.h"
+
+#include "src/cogen/instrument.tab.c"
+
+//#include "src/cogen/mccogen.h"
 
 void RunProgram() {
     TimeFunction;

@@ -1052,7 +1052,7 @@ complist:   /* empty */
               struct comp_iformal *formal;
 
               liter = list_iterate($2->def->out_par);
-              while((par = list_next(liter))) {
+              while((par = (char*) list_next(liter))) {
                 if (!strcmp($2->name, par))
                   print_error("ERROR: Component instance name "
               "'%s' matches an internal OUTPUT parameter of component class %s at "
@@ -1062,7 +1062,7 @@ complist:   /* empty */
               list_iterate_end(liter);
 
               liter = list_iterate($2->def->set_par);
-              while((formal = list_next(liter))) {
+              while((formal = (comp_iformal*) list_next(liter))) {
                 if (!strcmp($2->name, formal->id))
                   print_error("ERROR: Component instance name "
                   "'%s' matches an internal SETTING parameter of component class %s at "
@@ -1072,7 +1072,7 @@ complist:   /* empty */
               list_iterate_end(liter);
 
               liter = list_iterate($2->def->def_par);
-              while((formal = list_next(liter))) {
+              while((formal = (comp_iformal*) list_next(liter))) {
                 if (!strcmp($2->name, formal->id))
                   print_error("ERROR: Component instance name "
                   "'%s' matches an internal DEFINITION parameter of component class %s at "
@@ -1275,14 +1275,14 @@ component: removable cpuonly split "COMPONENT" instname '=' instref
 	    List_handle liter2 = list_iterate($13->lines);
 	    char *line, *line2;
 	    fprintf(stderr, "  EXTEND %%{\n");
-	    while((line = list_next(liter))) {
+	    while((line = (char*) list_next(liter))) {
 	      fprintf(stderr, "  %s",line);
 	    }
 	    list_iterate_end(liter);
 	    fprintf(stderr, "  %%}\n");
 	    fprintf(stderr, "\nis overwritten by:\n");
 	    fprintf(stderr, "  EXTEND %%{\n");
-	    while((line2 = list_next(liter2))) {
+	    while((line2 = (char*) list_next(liter2))) {
 	      fprintf(stderr, "  %s",line2);
 	    }
 	    list_iterate_end(liter2);
@@ -1299,7 +1299,11 @@ component: removable cpuonly split "COMPONENT" instname '=' instref
          list_cat(comp->metadata, $15);
         }
 
-        debugn((DEBUG_HIGH, "Component[%i]: %s = %s().\n", comp_current_index, $5, $7->def->name));
+
+        // TODO: define debugn
+        //debugn((DEBUG_HIGH, "Component[%i]: %s = %s().\n", comp_current_index, $5, $7->def->name));
+
+
         /* this comp will be 'previous' for the next, except if removed at include */
         if (!comp->removable) previous_comp = comp;
         $$ = comp;
@@ -1427,7 +1431,7 @@ groupdef:   TOK_ID
           list_add(group_instances_list, group);
         }
         else
-          group = ent->val;
+          group = (group_inst*) ent->val;
         $$ = group;
       }
 ;
@@ -1452,7 +1456,7 @@ compref: "PREVIOUS"
           print_warn(NULL, "Found invalid PREVIOUS(%i) reference at line %s:%d. Using ABSOLUTE.\n", index, instr_current_filename, instr_current_line);
           $$ = NULL;
         } else {
-          $$ = entry->val;
+          $$ = (comp_inst*) entry->val;
         }
       }
     | TOK_ID
@@ -1466,7 +1470,7 @@ compref: "PREVIOUS"
           print_error("ERROR: Reference to undefined component instance %s at line %s:%d.\n",
           $1, instr_current_filename, instr_current_line);
         else
-          comp = ent->val;
+          comp = (comp_inst*) ent->val;
         str_free($1);
         $$ = comp;
       }
@@ -1532,7 +1536,7 @@ metadatum:
   palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
-  char * tmp_key = malloc(((strlen($3)+3)*sizeof(char)));
+  char * tmp_key = (char*) malloc(((strlen($3)+3)*sizeof(char)));
   sprintf(tmp_key, "\"%s\"", $3);
   metadatum->name = str_quote(tmp_key);
   free(tmp_key);
@@ -1558,7 +1562,7 @@ metadatum:
   palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
-  char * tmp_key = malloc(((strlen($3)+3)*sizeof(char)));
+  char * tmp_key = (char*) malloc(((strlen($3)+3)*sizeof(char)));
   sprintf(tmp_key, "\"%s\"", $3);
   metadatum->name = str_quote(tmp_key);
   free(tmp_key);
@@ -1676,7 +1680,7 @@ search: "SEARCH" TOK_STRING
       }
       while (fgets(svalue, sizeof(svalue), sfp) != NULL){
         // Make a copy of the char array -- We can't free this memory until the program is done, so we're going to leak it :/
-        char * path = calloc(strlen(svalue)+1, sizeof(char));
+        char * path = (char*) calloc(strlen(svalue)+1, sizeof(char));
         strcpy(path, svalue);
         // Remove the trailing newline (and/or carriage return) which is almost-certainly present
         path[strcspn(path, "\r\n")] = 0;
@@ -1764,7 +1768,7 @@ topatexp:   "PREVIOUS"
         if (instrument_definition->formals)
           liter = list_iterate(instrument_definition->formals);
         if (liter)
-	          while((formal = list_next(liter)))
+	          while((formal = (instr_formal*) list_next(liter)))
         {
           if($1 && formal->id && strcmp($1, "NULL") && !strcmp($1, formal->id))
           {
@@ -2263,7 +2267,7 @@ check_comp_formals(List deflist, List setlist, char *compname)
      symbol table is an error. */
   formals = symtab_create();
   liter = list_iterate(deflist);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     if (!formal->id || !strlen(formal->id))
       print_error("ERROR: Definition parameter name %s is empty (length=0) "
@@ -2277,7 +2281,7 @@ check_comp_formals(List deflist, List setlist, char *compname)
   }
   list_iterate_end(liter);
   liter = list_iterate(setlist);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     if (!formal->id || !strlen(formal->id))
       print_error("ERROR: Setting parameter name %s is empty (length=0) "
@@ -2306,7 +2310,7 @@ check_instrument_formals(List formallist, char *instrname)
   /* We check the uniqueness. Any formal parameter that already appears in the
      formal list is reported. */
   liter = list_iterate(formallist);
-  while((formal = list_next(liter))) {
+  while((formal = (instr_formal*) list_next(liter))) {
     if (!formal->id || !strlen(formal->id))
       continue;
       // print_error("ERROR: Instrument parameter name %s is empty (length=0) "
@@ -2317,7 +2321,7 @@ check_instrument_formals(List formallist, char *instrname)
         struct instr_formal *formal2;
 
         liter2 = list_iterate(formallist);
-        while((formal2 = list_next(liter2))) {
+        while((formal2 = (instr_formal*) list_next(liter2))) {
         	if (formal != formal2 && strlen(formal2->id) && !strcmp(formal->id, formal2->id)) {
         		strcpy(formal2->id, "");  /* inactivate recurrent previous definition */
         		if (verbose) print_warn(NULL, "Instrument parameter name %s is used multiple times "
@@ -2354,7 +2358,7 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
 
   /* definition parameters */
   liter = list_iterate(comp->def->def_par);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     entry = symtab_lookup(actuals, formal->id);
     if(entry == NULL)
@@ -2376,12 +2380,12 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
          necessary to avoid duplication of computations or side effects in the
          expressions for the actual parameters, since DEFINITION parameters
          are assigned using #define's. */
-      if(!exp_isvalue(entry->val))
+      if(!exp_isvalue((cexp*) entry->val))
       {
         print_warn(NULL, "Warning: Using DEFINITION parameter of component %s() (potential syntax error) at line %s:%d\n"
           "  %s=%s\n",
           comp->def->name, instr_current_filename, instr_current_line,
-          formal->id, exp_tostring(entry->val));
+          formal->id, exp_tostring((cexp*) entry->val));
       }
     }
   }
@@ -2389,7 +2393,7 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
 
   /* setting parameters */
   liter = list_iterate(comp->def->set_par);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     entry = symtab_lookup(actuals, formal->id);
     if(entry == NULL)
@@ -2479,7 +2483,7 @@ read_component(char *name)
   entry = symtab_lookup(read_components, name);
   if(entry != NULL)
   {
-    return entry->val;    /* Return it if found. */
+    return (comp_def*) entry->val;    /* Return it if found. */
   }
   else
   {
@@ -2510,7 +2514,7 @@ read_component(char *name)
     entry = symtab_lookup(read_components, name);
     if(entry != NULL)
     {
-      return entry->val;
+      return (comp_def*) entry->val;
     }
     else
     {

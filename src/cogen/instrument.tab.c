@@ -55,7 +55,7 @@
 #define YYSKELETON_NAME "yacc.c"
 
 /* Pure parsers.  */
-#define YYPURE 0
+#define YYPURE 1
 
 /* Push parsers.  */
 #define YYPUSH 0
@@ -203,7 +203,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 77 "instrument.y"
+#line 74 "instrument.y"
 
   char *number;
   char *string;
@@ -239,7 +239,6 @@ typedef union YYSTYPE YYSTYPE;
 #endif
 
 
-extern YYSTYPE yylval;
 
 
 int yyparse (void);
@@ -772,24 +771,24 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,   185,   185,   186,   191,   192,   196,   235,   282,   285,
-     289,   298,   317,   320,   324,   333,   350,   360,   363,   370,
-     373,   380,   383,   387,   394,   397,   405,   408,   416,   423,
-     426,   432,   437,   444,   468,   486,   495,   505,   529,   551,
-     554,   558,   567,   585,   588,   595,   598,   607,   622,   629,
-     632,   636,   645,   663,   666,   670,   679,   697,   700,   704,
-     713,   737,   735,   796,   803,   806,   812,   817,   824,   843,
-     860,   870,   881,   902,   921,   941,   959,   970,   982,  1004,
-    1028,  1031,  1037,  1100,  1104,  1110,  1116,  1122,  1128,  1134,
-    1152,  1169,  1188,  1191,  1199,  1202,  1212,  1211,  1314,  1317,
-    1321,  1328,  1335,  1338,  1344,  1350,  1359,  1362,  1368,  1376,
-    1380,  1389,  1393,  1397,  1405,  1408,  1414,  1438,  1447,  1461,
-    1478,  1488,  1491,  1498,  1501,  1507,  1512,  1521,  1532,  1547,
-    1558,  1575,  1578,  1584,  1589,  1596,  1608,  1613,  1620,  1625,
-    1630,  1635,  1640,  1644,  1653,  1655,  1667,  1671,  1698,  1700,
-    1709,  1713,  1724,  1724,  1732,  1736,  1746,  1754,  1759,  1785,
-    1790,  1795,  1800,  1804,  1808,  1812,  1821,  1829,  1838,  1846,
-    1855,  1866,  1870,  1878,  1882,  1890,  1900,  1904
+       0,   182,   182,   183,   188,   189,   193,   232,   279,   282,
+     286,   295,   314,   317,   321,   330,   347,   357,   360,   367,
+     370,   377,   380,   384,   391,   394,   402,   405,   413,   420,
+     423,   429,   434,   441,   465,   483,   492,   502,   526,   548,
+     551,   555,   564,   582,   585,   592,   595,   604,   619,   626,
+     629,   633,   642,   660,   663,   667,   676,   694,   697,   701,
+     710,   734,   732,   793,   800,   803,   809,   814,   821,   840,
+     857,   867,   878,   899,   918,   938,   956,   967,   979,  1001,
+    1025,  1028,  1034,  1097,  1101,  1107,  1113,  1119,  1125,  1131,
+    1149,  1166,  1185,  1188,  1196,  1199,  1209,  1208,  1315,  1318,
+    1322,  1329,  1336,  1339,  1345,  1351,  1360,  1363,  1369,  1377,
+    1381,  1390,  1394,  1398,  1406,  1409,  1415,  1439,  1448,  1462,
+    1479,  1489,  1492,  1499,  1502,  1508,  1513,  1522,  1533,  1548,
+    1559,  1576,  1579,  1585,  1590,  1597,  1609,  1614,  1621,  1626,
+    1631,  1636,  1641,  1645,  1654,  1656,  1668,  1672,  1699,  1701,
+    1710,  1714,  1725,  1725,  1733,  1737,  1747,  1755,  1760,  1786,
+    1791,  1796,  1801,  1805,  1809,  1813,  1822,  1830,  1839,  1847,
+    1856,  1867,  1871,  1879,  1883,  1891,  1901,  1905
 };
 #endif
 
@@ -1321,13 +1320,6 @@ yydestruct (const char *yymsg,
 }
 
 
-/* Lookahead token kind.  */
-int yychar;
-
-/* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval;
-/* Number of syntax errors so far.  */
-int yynerrs;
 
 
 
@@ -1339,6 +1331,19 @@ int yynerrs;
 int
 yyparse (void)
 {
+/* Lookahead token kind.  */
+int yychar;
+
+
+/* The semantic value of the lookahead symbol.  */
+/* Default value used for initialization, for pacifying older GCCs
+   or non-GCC compilers.  */
+YY_INITIAL_VALUE (static YYSTYPE yyval_default;)
+YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
+
+    /* Number of syntax errors so far.  */
+    int yynerrs = 0;
+
     yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
     int yyerrstatus = 0;
@@ -1491,7 +1496,7 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
-      yychar = yylex ();
+      yychar = yylex (&yylval);
     }
 
   if (yychar <= YYEOF)
@@ -1579,7 +1584,7 @@ yyreduce:
   switch (yyn)
     {
   case 6: /* compdef: "DEFINE" "COMPONENT" TOK_ID parameters metadata shell dependency noacc share uservars declare initialize trace save finally display "END"  */
-#line 197 "instrument.y"
+#line 194 "instrument.y"
       {
         struct comp_def *c;
         palloc(c);
@@ -1617,11 +1622,11 @@ yyreduce:
         symtab_add(read_components, c->name, c);
         if (verbose) fprintf(stderr, "Embedding component %s from file %s\n", c->name, c->source);
       }
-#line 1621 "instrument.tab.c"
+#line 1626 "instrument.tab.c"
     break;
 
   case 7: /* compdef: "DEFINE" "COMPONENT" TOK_ID "COPY" TOK_ID parameters metadata shell dependency noacc share uservars declare initialize trace save finally display "END"  */
-#line 236 "instrument.y"
+#line 233 "instrument.y"
       {
         /* create a copy of a comp, and initiate it with given blocks */
         /* all redefined blocks override */
@@ -1664,27 +1669,27 @@ yyreduce:
         }
 
       }
-#line 1668 "instrument.tab.c"
+#line 1673 "instrument.tab.c"
     break;
 
   case 8: /* share: %empty  */
-#line 282 "instrument.y"
+#line 279 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 1676 "instrument.tab.c"
+#line 1681 "instrument.tab.c"
     break;
 
   case 9: /* share: "SHARE" codeblock  */
-#line 286 "instrument.y"
+#line 283 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 1684 "instrument.tab.c"
+#line 1689 "instrument.tab.c"
     break;
 
   case 10: /* share: "SHARE" "COPY" TOK_ID  */
-#line 290 "instrument.y"
+#line 287 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -1693,11 +1698,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 1697 "instrument.tab.c"
+#line 1702 "instrument.tab.c"
     break;
 
   case 11: /* share: "SHARE" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 299 "instrument.y"
+#line 296 "instrument.y"
       {
         struct comp_def *def;
         struct code_block *cb;
@@ -1712,27 +1717,27 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 1716 "instrument.tab.c"
+#line 1721 "instrument.tab.c"
     break;
 
   case 12: /* trace: %empty  */
-#line 317 "instrument.y"
+#line 314 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 1724 "instrument.tab.c"
+#line 1729 "instrument.tab.c"
     break;
 
   case 13: /* trace: "TRACE" codeblock  */
-#line 321 "instrument.y"
+#line 318 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 1732 "instrument.tab.c"
+#line 1737 "instrument.tab.c"
     break;
 
   case 14: /* trace: "TRACE" "COPY" TOK_ID  */
-#line 325 "instrument.y"
+#line 322 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -1741,11 +1746,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 1745 "instrument.tab.c"
+#line 1750 "instrument.tab.c"
     break;
 
   case 15: /* trace: "TRACE" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 334 "instrument.y"
+#line 331 "instrument.y"
       {
         struct comp_def *def;
         struct code_block *cb;
@@ -1760,153 +1765,153 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 1764 "instrument.tab.c"
+#line 1769 "instrument.tab.c"
     break;
 
   case 16: /* parameters: def_par set_par out_par state_par pol_par  */
-#line 351 "instrument.y"
+#line 348 "instrument.y"
       {
         (yyval.parms).def = (yyvsp[-4].formals);
         (yyval.parms).set = (yyvsp[-3].formals);
         (yyval.parms).out = (yyvsp[-2].formals);
       }
-#line 1774 "instrument.tab.c"
+#line 1779 "instrument.tab.c"
     break;
 
   case 17: /* def_par: %empty  */
-#line 360 "instrument.y"
+#line 357 "instrument.y"
       {
         (yyval.formals) = list_create();
       }
-#line 1782 "instrument.tab.c"
+#line 1787 "instrument.tab.c"
     break;
 
   case 18: /* def_par: "DEFINITION" "PARAMETERS" comp_iformallist  */
-#line 364 "instrument.y"
+#line 361 "instrument.y"
       {
         (yyval.formals) = (yyvsp[0].comp_iformals);
       }
-#line 1790 "instrument.tab.c"
+#line 1795 "instrument.tab.c"
     break;
 
   case 19: /* set_par: %empty  */
-#line 370 "instrument.y"
+#line 367 "instrument.y"
       {
         (yyval.formals) = list_create();
       }
-#line 1798 "instrument.tab.c"
+#line 1803 "instrument.tab.c"
     break;
 
   case 20: /* set_par: "SETTING" "PARAMETERS" comp_iformallist  */
-#line 374 "instrument.y"
+#line 371 "instrument.y"
       {
         (yyval.formals) = (yyvsp[0].comp_iformals);
       }
-#line 1806 "instrument.tab.c"
+#line 1811 "instrument.tab.c"
     break;
 
   case 21: /* out_par: %empty  */
-#line 380 "instrument.y"
+#line 377 "instrument.y"
       {
         (yyval.formals) = list_create();
       }
-#line 1814 "instrument.tab.c"
+#line 1819 "instrument.tab.c"
     break;
 
   case 22: /* out_par: "OUTPUT" "PARAMETERS" comp_iformallist  */
-#line 384 "instrument.y"
+#line 381 "instrument.y"
       {
         (yyval.formals) = (yyvsp[0].comp_iformals);
       }
-#line 1822 "instrument.tab.c"
+#line 1827 "instrument.tab.c"
     break;
 
   case 23: /* out_par: "PRIVATE" "PARAMETERS" comp_iformallist  */
-#line 388 "instrument.y"
+#line 385 "instrument.y"
       {
         (yyval.formals) = (yyvsp[0].comp_iformals);
       }
-#line 1830 "instrument.tab.c"
+#line 1835 "instrument.tab.c"
     break;
 
   case 24: /* state_par: %empty  */
-#line 394 "instrument.y"
+#line 391 "instrument.y"
       {
         /* Do nothing */
       }
-#line 1838 "instrument.tab.c"
+#line 1843 "instrument.tab.c"
     break;
 
   case 25: /* state_par: "STATE" "PARAMETERS" comp_iformallist  */
-#line 398 "instrument.y"
+#line 395 "instrument.y"
       {
         /* Issue warning */
         print_error("ERROR: %s is using STATE PARAMETERS\n    %s %s does NOT support this keyword. Please remove line %d.\n", instr_current_filename, MCCODE_NAME,MCCODE_VERSION, instr_current_line);
       }
-#line 1847 "instrument.tab.c"
+#line 1852 "instrument.tab.c"
     break;
 
   case 26: /* pol_par: %empty  */
-#line 405 "instrument.y"
+#line 402 "instrument.y"
       {
         /* Do nothing */
       }
-#line 1855 "instrument.tab.c"
+#line 1860 "instrument.tab.c"
     break;
 
   case 27: /* pol_par: "POLARISATION" "PARAMETERS" comp_iformallist  */
-#line 409 "instrument.y"
+#line 406 "instrument.y"
       {
         /* Issue warning */
         print_error("ERROR: %s is using POLARISATION PARAMETERS\n    %s %s does NOT support this keyword. Please remove line %d.\n", instr_current_filename, MCCODE_NAME,MCCODE_VERSION, instr_current_line);
       }
-#line 1864 "instrument.tab.c"
+#line 1869 "instrument.tab.c"
     break;
 
   case 28: /* comp_iformallist: '(' comp_iformals ')'  */
-#line 417 "instrument.y"
+#line 414 "instrument.y"
       {
         (yyval.comp_iformals) = (yyvsp[-1].comp_iformals);
       }
-#line 1872 "instrument.tab.c"
+#line 1877 "instrument.tab.c"
     break;
 
   case 29: /* comp_iformals: %empty  */
-#line 423 "instrument.y"
+#line 420 "instrument.y"
       {
         (yyval.comp_iformals) = list_create();
       }
-#line 1880 "instrument.tab.c"
+#line 1885 "instrument.tab.c"
     break;
 
   case 30: /* comp_iformals: comp_iformals1  */
-#line 427 "instrument.y"
+#line 424 "instrument.y"
       {
         (yyval.comp_iformals) = (yyvsp[0].comp_iformals);
       }
-#line 1888 "instrument.tab.c"
+#line 1893 "instrument.tab.c"
     break;
 
   case 31: /* comp_iformals1: comp_iformal  */
-#line 433 "instrument.y"
+#line 430 "instrument.y"
       {
         (yyval.comp_iformals) = list_create();
         list_add((yyval.comp_iformals), (yyvsp[0].cformal));
       }
-#line 1897 "instrument.tab.c"
+#line 1902 "instrument.tab.c"
     break;
 
   case 32: /* comp_iformals1: comp_iformals1 ',' comp_iformal  */
-#line 438 "instrument.y"
+#line 435 "instrument.y"
       {
         list_add((yyvsp[-2].comp_iformals), (yyvsp[0].cformal));
         (yyval.comp_iformals) = (yyvsp[-2].comp_iformals);
       }
-#line 1906 "instrument.tab.c"
+#line 1911 "instrument.tab.c"
     break;
 
   case 33: /* comp_iformal: TOK_ID TOK_ID  */
-#line 445 "instrument.y"
+#line 442 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -1930,11 +1935,11 @@ yyreduce:
         formal->id = (yyvsp[0].string);
         (yyval.cformal) = formal;
       }
-#line 1934 "instrument.tab.c"
+#line 1939 "instrument.tab.c"
     break;
 
   case 34: /* comp_iformal: TOK_ID '*' TOK_ID  */
-#line 469 "instrument.y"
+#line 466 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -1952,11 +1957,11 @@ yyreduce:
         formal->id = (yyvsp[0].string);
         (yyval.cformal) = formal;
       }
-#line 1956 "instrument.tab.c"
+#line 1961 "instrument.tab.c"
     break;
 
   case 35: /* comp_iformal: TOK_ID  */
-#line 487 "instrument.y"
+#line 484 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -1965,11 +1970,11 @@ yyreduce:
         formal->type = instr_type_double;
         (yyval.cformal) = formal;
       }
-#line 1969 "instrument.tab.c"
+#line 1974 "instrument.tab.c"
     break;
 
   case 36: /* comp_iformal: TOK_ID '=' exp  */
-#line 496 "instrument.y"
+#line 493 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -1979,11 +1984,11 @@ yyreduce:
         formal->type = instr_type_double;
         (yyval.cformal) = formal;
       }
-#line 1983 "instrument.tab.c"
+#line 1988 "instrument.tab.c"
     break;
 
   case 37: /* comp_iformal: TOK_ID TOK_ID '=' exp  */
-#line 506 "instrument.y"
+#line 503 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -2007,11 +2012,11 @@ yyreduce:
         formal->default_value = (yyvsp[0].exp);
         (yyval.cformal) = formal;
       }
-#line 2011 "instrument.tab.c"
+#line 2016 "instrument.tab.c"
     break;
 
   case 38: /* comp_iformal: TOK_ID '*' TOK_ID '=' exp  */
-#line 530 "instrument.y"
+#line 527 "instrument.y"
       {
         struct comp_iformal *formal;
         palloc(formal);
@@ -2029,27 +2034,27 @@ yyreduce:
         }
         (yyval.cformal) = formal;
       }
-#line 2033 "instrument.tab.c"
+#line 2038 "instrument.tab.c"
     break;
 
   case 39: /* declare: %empty  */
-#line 551 "instrument.y"
+#line 548 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2041 "instrument.tab.c"
+#line 2046 "instrument.tab.c"
     break;
 
   case 40: /* declare: "DECLARE" codeblock  */
-#line 555 "instrument.y"
+#line 552 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2049 "instrument.tab.c"
+#line 2054 "instrument.tab.c"
     break;
 
   case 41: /* declare: "DECLARE" "COPY" TOK_ID  */
-#line 559 "instrument.y"
+#line 556 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -2058,11 +2063,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 2062 "instrument.tab.c"
+#line 2067 "instrument.tab.c"
     break;
 
   case 42: /* declare: "DECLARE" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 568 "instrument.y"
+#line 565 "instrument.y"
       {
         struct comp_def   *def;
         struct code_block *cb;
@@ -2077,35 +2082,35 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 2081 "instrument.tab.c"
+#line 2086 "instrument.tab.c"
     break;
 
   case 43: /* uservars: %empty  */
-#line 585 "instrument.y"
+#line 582 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2089 "instrument.tab.c"
+#line 2094 "instrument.tab.c"
     break;
 
   case 44: /* uservars: "USERVARS" codeblock  */
-#line 589 "instrument.y"
+#line 586 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2097 "instrument.tab.c"
+#line 2102 "instrument.tab.c"
     break;
 
   case 45: /* initialize: %empty  */
-#line 595 "instrument.y"
+#line 592 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2105 "instrument.tab.c"
+#line 2110 "instrument.tab.c"
     break;
 
   case 46: /* initialize: "INITIALISE" "COPY" TOK_ID  */
-#line 599 "instrument.y"
+#line 596 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -2114,11 +2119,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 2118 "instrument.tab.c"
+#line 2123 "instrument.tab.c"
     break;
 
   case 47: /* initialize: "INITIALISE" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 608 "instrument.y"
+#line 605 "instrument.y"
       {
         struct comp_def   *def;
         struct code_block *cb;
@@ -2133,35 +2138,35 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 2137 "instrument.tab.c"
+#line 2142 "instrument.tab.c"
     break;
 
   case 48: /* initialize: "INITIALISE" codeblock  */
-#line 623 "instrument.y"
+#line 620 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2145 "instrument.tab.c"
+#line 2150 "instrument.tab.c"
     break;
 
   case 49: /* save: %empty  */
-#line 629 "instrument.y"
+#line 626 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2153 "instrument.tab.c"
+#line 2158 "instrument.tab.c"
     break;
 
   case 50: /* save: "SAVE" codeblock  */
-#line 633 "instrument.y"
+#line 630 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2161 "instrument.tab.c"
+#line 2166 "instrument.tab.c"
     break;
 
   case 51: /* save: "SAVE" "COPY" TOK_ID  */
-#line 637 "instrument.y"
+#line 634 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -2170,11 +2175,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 2174 "instrument.tab.c"
+#line 2179 "instrument.tab.c"
     break;
 
   case 52: /* save: "SAVE" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 646 "instrument.y"
+#line 643 "instrument.y"
       {
         struct comp_def *def;
         struct code_block *cb;
@@ -2189,27 +2194,27 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 2193 "instrument.tab.c"
+#line 2198 "instrument.tab.c"
     break;
 
   case 53: /* finally: %empty  */
-#line 663 "instrument.y"
+#line 660 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2201 "instrument.tab.c"
+#line 2206 "instrument.tab.c"
     break;
 
   case 54: /* finally: "FINALLY" codeblock  */
-#line 667 "instrument.y"
+#line 664 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2209 "instrument.tab.c"
+#line 2214 "instrument.tab.c"
     break;
 
   case 55: /* finally: "FINALLY" "COPY" TOK_ID  */
-#line 671 "instrument.y"
+#line 668 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -2218,11 +2223,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 2222 "instrument.tab.c"
+#line 2227 "instrument.tab.c"
     break;
 
   case 56: /* finally: "FINALLY" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 680 "instrument.y"
+#line 677 "instrument.y"
       {
         struct comp_def *def;
         struct code_block *cb;
@@ -2237,27 +2242,27 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 2241 "instrument.tab.c"
+#line 2246 "instrument.tab.c"
     break;
 
   case 57: /* display: %empty  */
-#line 697 "instrument.y"
+#line 694 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 2249 "instrument.tab.c"
+#line 2254 "instrument.tab.c"
     break;
 
   case 58: /* display: "DISPLAY" codeblock  */
-#line 701 "instrument.y"
+#line 698 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 2257 "instrument.tab.c"
+#line 2262 "instrument.tab.c"
     break;
 
   case 59: /* display: "DISPLAY" "COPY" TOK_ID  */
-#line 705 "instrument.y"
+#line 702 "instrument.y"
       {
         struct comp_def *def;
         def = read_component((yyvsp[0].string));
@@ -2266,11 +2271,11 @@ yyreduce:
         else
           (yyval.ccode) = codeblock_new();
       }
-#line 2270 "instrument.tab.c"
+#line 2275 "instrument.tab.c"
     break;
 
   case 60: /* display: "DISPLAY" "COPY" TOK_ID "EXTEND" codeblock  */
-#line 714 "instrument.y"
+#line 711 "instrument.y"
       {
         struct comp_def *def;
         struct code_block *cb;
@@ -2285,11 +2290,11 @@ yyreduce:
         }
         (yyval.ccode) = cb;
       }
-#line 2289 "instrument.tab.c"
+#line 2294 "instrument.tab.c"
     break;
 
   case 61: /* $@1: %empty  */
-#line 737 "instrument.y"
+#line 734 "instrument.y"
       {
         if (!instrument_definition->formals) instrument_definition->formals = (yyvsp[0].iformals);
         else { if (list_len((yyvsp[0].iformals))) list_cat(instrument_definition->formals,(yyvsp[0].iformals)); }
@@ -2299,11 +2304,11 @@ yyreduce:
           instrument_definition->has_included_instr++;
         }
       }
-#line 2303 "instrument.tab.c"
+#line 2308 "instrument.tab.c"
     break;
 
   case 62: /* instrument: "DEFINE" "INSTRUMENT" TOK_ID instrpar_list $@1 shell dependency declare uservars initialize instr_trace save finally "END"  */
-#line 763 "instrument.y"
+#line 760 "instrument.y"
       {
         if (!instrument_definition->decls) instrument_definition->decls = (yyvsp[-6].ccode);
         else list_cat(instrument_definition->decls->lines, (yyvsp[-6].ccode)->lines);
@@ -2333,53 +2338,53 @@ yyreduce:
         check_instrument_formals(instrument_definition->formals, instrument_definition->name);
         if (verbose && !error_encountered) fprintf(stderr, "Creating instrument '%s' (with %li component instances)\n", (yyvsp[-11].string), comp_current_index);
       }
-#line 2337 "instrument.tab.c"
+#line 2342 "instrument.tab.c"
     break;
 
   case 63: /* instrpar_list: '(' instr_formals ')'  */
-#line 797 "instrument.y"
+#line 794 "instrument.y"
       {
         (yyval.iformals) = (yyvsp[-1].iformals);
       }
-#line 2345 "instrument.tab.c"
+#line 2350 "instrument.tab.c"
     break;
 
   case 64: /* instr_formals: %empty  */
-#line 803 "instrument.y"
+#line 800 "instrument.y"
       {
         (yyval.iformals) = list_create();
       }
-#line 2353 "instrument.tab.c"
+#line 2358 "instrument.tab.c"
     break;
 
   case 65: /* instr_formals: instr_formals1  */
-#line 807 "instrument.y"
+#line 804 "instrument.y"
       {
         (yyval.iformals) = (yyvsp[0].iformals);
       }
-#line 2361 "instrument.tab.c"
+#line 2366 "instrument.tab.c"
     break;
 
   case 66: /* instr_formals1: instr_formal  */
-#line 813 "instrument.y"
+#line 810 "instrument.y"
       {
         (yyval.iformals) = list_create();
         list_add((yyval.iformals), (yyvsp[0].iformal));
       }
-#line 2370 "instrument.tab.c"
+#line 2375 "instrument.tab.c"
     break;
 
   case 67: /* instr_formals1: instr_formals1 ',' instr_formal  */
-#line 818 "instrument.y"
+#line 815 "instrument.y"
       {
         list_add((yyvsp[-2].iformals), (yyvsp[0].iformal));
         (yyval.iformals) = (yyvsp[-2].iformals);
       }
-#line 2379 "instrument.tab.c"
+#line 2384 "instrument.tab.c"
     break;
 
   case 68: /* instr_formal: TOK_ID TOK_ID  */
-#line 825 "instrument.y"
+#line 822 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2398,11 +2403,11 @@ yyreduce:
         formal->hasunit = 0;
         (yyval.iformal) = formal;
       }
-#line 2402 "instrument.tab.c"
+#line 2407 "instrument.tab.c"
     break;
 
   case 69: /* instr_formal: TOK_ID '*' TOK_ID  */
-#line 844 "instrument.y"
+#line 841 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2419,11 +2424,11 @@ yyreduce:
         formal->hasunit = 0;
         (yyval.iformal) = formal;
       }
-#line 2423 "instrument.tab.c"
+#line 2428 "instrument.tab.c"
     break;
 
   case 70: /* instr_formal: TOK_ID  */
-#line 861 "instrument.y"
+#line 858 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2433,11 +2438,11 @@ yyreduce:
         formal->hasunit = 0;
         (yyval.iformal) = formal;
       }
-#line 2437 "instrument.tab.c"
+#line 2442 "instrument.tab.c"
     break;
 
   case 71: /* instr_formal: TOK_ID '=' exp  */
-#line 871 "instrument.y"
+#line 868 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2448,11 +2453,11 @@ yyreduce:
         formal->hasunit = 0;
         (yyval.iformal) = formal;
       }
-#line 2452 "instrument.tab.c"
+#line 2457 "instrument.tab.c"
     break;
 
   case 72: /* instr_formal: TOK_ID TOK_ID '=' exp  */
-#line 882 "instrument.y"
+#line 879 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2473,11 +2478,11 @@ yyreduce:
         formal->hasunit = 0;
         (yyval.iformal) = formal;
       }
-#line 2477 "instrument.tab.c"
+#line 2482 "instrument.tab.c"
     break;
 
   case 73: /* instr_formal: TOK_ID '*' TOK_ID '=' exp  */
-#line 903 "instrument.y"
+#line 900 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2496,11 +2501,11 @@ yyreduce:
         }
         (yyval.iformal) = formal;
       }
-#line 2500 "instrument.tab.c"
+#line 2505 "instrument.tab.c"
     break;
 
   case 74: /* instr_formal: TOK_ID TOK_ID '/' TOK_STRING  */
-#line 922 "instrument.y"
+#line 919 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2520,11 +2525,11 @@ yyreduce:
         formal->unit = (yyvsp[0].string);
         (yyval.iformal) = formal;
       }
-#line 2524 "instrument.tab.c"
+#line 2529 "instrument.tab.c"
     break;
 
   case 75: /* instr_formal: TOK_ID '*' TOK_ID '/' TOK_STRING  */
-#line 942 "instrument.y"
+#line 939 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2542,11 +2547,11 @@ yyreduce:
         formal->unit = (yyvsp[0].string);
         (yyval.iformal) = formal;
       }
-#line 2546 "instrument.tab.c"
+#line 2551 "instrument.tab.c"
     break;
 
   case 76: /* instr_formal: TOK_ID '/' TOK_STRING  */
-#line 960 "instrument.y"
+#line 957 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2557,11 +2562,11 @@ yyreduce:
         formal->unit = (yyvsp[0].string);
         (yyval.iformal) = formal;
       }
-#line 2561 "instrument.tab.c"
+#line 2566 "instrument.tab.c"
     break;
 
   case 77: /* instr_formal: TOK_ID '/' TOK_STRING '=' exp  */
-#line 971 "instrument.y"
+#line 968 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2573,11 +2578,11 @@ yyreduce:
         formal->unit = (yyvsp[-2].string);
         (yyval.iformal) = formal;
       }
-#line 2577 "instrument.tab.c"
+#line 2582 "instrument.tab.c"
     break;
 
   case 78: /* instr_formal: TOK_ID TOK_ID '/' TOK_STRING '=' exp  */
-#line 983 "instrument.y"
+#line 980 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2599,11 +2604,11 @@ yyreduce:
         formal->unit = (yyvsp[-2].string);
         (yyval.iformal) = formal;
       }
-#line 2603 "instrument.tab.c"
+#line 2608 "instrument.tab.c"
     break;
 
   case 79: /* instr_formal: TOK_ID '*' TOK_ID '/' TOK_STRING '=' exp  */
-#line 1005 "instrument.y"
+#line 1002 "instrument.y"
       {
         struct instr_formal *formal;
         palloc(formal);
@@ -2623,22 +2628,22 @@ yyreduce:
         formal->unit = (yyvsp[-2].string);
         (yyval.iformal) = formal;
       }
-#line 2627 "instrument.tab.c"
+#line 2632 "instrument.tab.c"
     break;
 
   case 81: /* complist: %empty  */
-#line 1031 "instrument.y"
+#line 1028 "instrument.y"
       {
         if (!comp_instances)      comp_instances      = symtab_create();
         if (!comp_instances_list) comp_instances_list = list_create();
         if (!group_instances)     group_instances     = symtab_create();
         if (!group_instances_list)group_instances_list= list_create();
       }
-#line 2638 "instrument.tab.c"
+#line 2643 "instrument.tab.c"
     break;
 
   case 82: /* complist: complist component  */
-#line 1038 "instrument.y"
+#line 1035 "instrument.y"
       {
         if (!(yyvsp[0].instance)->removable) { /* must not be a REMOVABLE COMPONENT after %include instr */
           /* Check that the component instance name has not been used before. */
@@ -2659,7 +2664,7 @@ yyreduce:
               struct comp_iformal *formal;
 
               liter = list_iterate((yyvsp[0].instance)->def->out_par);
-              while((par = list_next(liter))) {
+              while((par = (char*) list_next(liter))) {
                 if (!strcmp((yyvsp[0].instance)->name, par))
                   print_error("ERROR: Component instance name "
               "'%s' matches an internal OUTPUT parameter of component class %s at "
@@ -2669,7 +2674,7 @@ yyreduce:
               list_iterate_end(liter);
 
               liter = list_iterate((yyvsp[0].instance)->def->set_par);
-              while((formal = list_next(liter))) {
+              while((formal = (comp_iformal*) list_next(liter))) {
                 if (!strcmp((yyvsp[0].instance)->name, formal->id))
                   print_error("ERROR: Component instance name "
                   "'%s' matches an internal SETTING parameter of component class %s at "
@@ -2679,7 +2684,7 @@ yyreduce:
               list_iterate_end(liter);
 
               liter = list_iterate((yyvsp[0].instance)->def->def_par);
-              while((formal = list_next(liter))) {
+              while((formal = (comp_iformal*) list_next(liter))) {
                 if (!strcmp((yyvsp[0].instance)->name, formal->id))
                   print_error("ERROR: Component instance name "
                   "'%s' matches an internal DEFINITION parameter of component class %s at "
@@ -2701,65 +2706,65 @@ yyreduce:
           if (verbose && (yyvsp[0].instance)->def) fprintf(stderr, "Component[%li]: %s = %s() SKIPPED (REMOVABLE COMPONENT when included)\n", comp_current_index, (yyvsp[0].instance)->name, (yyvsp[0].instance)->def->name);
         }
       }
-#line 2705 "instrument.tab.c"
+#line 2710 "instrument.tab.c"
     break;
 
   case 83: /* complist: complist instrument  */
-#line 1101 "instrument.y"
+#line 1098 "instrument.y"
     {
       /* included instrument */
     }
-#line 2713 "instrument.tab.c"
+#line 2718 "instrument.tab.c"
     break;
 
   case 84: /* complist: complist search  */
-#line 1105 "instrument.y"
+#line 1102 "instrument.y"
     {
       /* extend the search path inside of trace */
     }
-#line 2721 "instrument.tab.c"
+#line 2726 "instrument.tab.c"
     break;
 
   case 85: /* instname: "COPY" '(' TOK_ID ')'  */
-#line 1111 "instrument.y"
+#line 1108 "instrument.y"
       {
         char str_index[64];
         sprintf(str_index, "_%li", comp_current_index+1);
         (yyval.string) = str_cat((yyvsp[-1].string), str_index, NULL);
       }
-#line 2731 "instrument.tab.c"
+#line 2736 "instrument.tab.c"
     break;
 
   case 86: /* instname: "MYSELF"  */
-#line 1117 "instrument.y"
+#line 1114 "instrument.y"
       {
         char str_index[64];
         sprintf(str_index, "_%li", comp_current_index+1);
         (yyval.string) = str_cat("Comp", str_index, NULL);
       }
-#line 2741 "instrument.tab.c"
+#line 2746 "instrument.tab.c"
     break;
 
   case 87: /* instname: "COPY"  */
-#line 1123 "instrument.y"
+#line 1120 "instrument.y"
       {
         char str_index[64];
         sprintf(str_index, "_%li", comp_current_index+1);
         (yyval.string) = str_cat("Comp", str_index, NULL);
       }
-#line 2751 "instrument.tab.c"
+#line 2756 "instrument.tab.c"
     break;
 
   case 88: /* instname: TOK_ID  */
-#line 1129 "instrument.y"
+#line 1126 "instrument.y"
       {
         (yyval.string) = (yyvsp[0].string);
       }
-#line 2759 "instrument.tab.c"
+#line 2764 "instrument.tab.c"
     break;
 
   case 89: /* instref: "COPY" '(' compref ')' actuallist  */
-#line 1135 "instrument.y"
+#line 1132 "instrument.y"
       {
         struct comp_inst *comp_src;
         struct comp_inst *comp;
@@ -2777,11 +2782,11 @@ yyreduce:
         comp->metadata = metadata_list_copy(comp_src->metadata);
         (yyval.instance) = comp;
       }
-#line 2781 "instrument.tab.c"
+#line 2786 "instrument.tab.c"
     break;
 
   case 90: /* instref: "COPY" '(' compref ')'  */
-#line 1153 "instrument.y"
+#line 1150 "instrument.y"
       {
         struct comp_inst *comp_src;
         struct comp_inst *comp;
@@ -2798,11 +2803,11 @@ yyreduce:
         comp->metadata = metadata_list_copy(comp_src->metadata);
         (yyval.instance) = comp;
       }
-#line 2802 "instrument.tab.c"
+#line 2807 "instrument.tab.c"
     break;
 
   case 91: /* instref: TOK_ID actuallist  */
-#line 1170 "instrument.y"
+#line 1167 "instrument.y"
       {
         struct comp_def *def;
         struct comp_inst *comp;
@@ -2818,46 +2823,46 @@ yyreduce:
         comp->metadata = metadata_list_copy(def->metadata);
         (yyval.instance) = comp;
       }
-#line 2822 "instrument.tab.c"
+#line 2827 "instrument.tab.c"
     break;
 
   case 92: /* removable: %empty  */
-#line 1188 "instrument.y"
+#line 1185 "instrument.y"
       {
         (yyval.linenum) = 0;
       }
-#line 2830 "instrument.tab.c"
+#line 2835 "instrument.tab.c"
     break;
 
   case 93: /* removable: "REMOVABLE"  */
-#line 1192 "instrument.y"
+#line 1189 "instrument.y"
       {
         (yyval.linenum) = instrument_definition->has_included_instr; /* ignore comp if included from other instrument */
       }
-#line 2838 "instrument.tab.c"
+#line 2843 "instrument.tab.c"
     break;
 
   case 94: /* cpuonly: %empty  */
-#line 1199 "instrument.y"
+#line 1196 "instrument.y"
       {
         (yyval.linenum) = 0;
       }
-#line 2846 "instrument.tab.c"
+#line 2851 "instrument.tab.c"
     break;
 
   case 95: /* cpuonly: "CPU"  */
-#line 1203 "instrument.y"
+#line 1200 "instrument.y"
       {
         (yyval.linenum) = 1;
 	if (strstr(instrument_definition->dependency," -DFUNNEL ") == NULL) {
 	  strncat(instrument_definition->dependency, " -DFUNNEL ", 1024);
 	}
       }
-#line 2857 "instrument.tab.c"
+#line 2862 "instrument.tab.c"
     break;
 
   case 96: /* $@2: %empty  */
-#line 1212 "instrument.y"
+#line 1209 "instrument.y"
       {
         struct comp_inst *comp;
         myself_comp = comp = (yyvsp[0].instance);
@@ -2882,11 +2887,11 @@ yyreduce:
           comp_formals_actuals(comp, comp->actuals);
         }
       }
-#line 2886 "instrument.tab.c"
+#line 2891 "instrument.tab.c"
     break;
 
   case 97: /* component: removable cpuonly split "COMPONENT" instname '=' instref $@2 when place orientation groupref extend jumps metadata  */
-#line 1237 "instrument.y"
+#line 1234 "instrument.y"
       {
         struct comp_inst *comp = myself_comp;
 
@@ -2931,14 +2936,14 @@ yyreduce:
 	    List_handle liter2 = list_iterate((yyvsp[-2].ccode)->lines);
 	    char *line, *line2;
 	    fprintf(stderr, "  EXTEND %%{\n");
-	    while((line = list_next(liter))) {
+	    while((line = (char*) list_next(liter))) {
 	      fprintf(stderr, "  %s",line);
 	    }
 	    list_iterate_end(liter);
 	    fprintf(stderr, "  %%}\n");
 	    fprintf(stderr, "\nis overwritten by:\n");
 	    fprintf(stderr, "  EXTEND %%{\n");
-	    while((line2 = list_next(liter2))) {
+	    while((line2 = (char*) list_next(liter2))) {
 	      fprintf(stderr, "  %s",line2);
 	    }
 	    list_iterate_end(liter2);
@@ -2955,169 +2960,173 @@ yyreduce:
          list_cat(comp->metadata, (yyvsp[0].metadata));
         }
 
-        debugn((DEBUG_HIGH, "Component[%i]: %s = %s().\n", comp_current_index, (yyvsp[-10].string), (yyvsp[-8].instance)->def->name));
+
+        // TODO: define debugn
+        //debugn((DEBUG_HIGH, "Component[%i]: %s = %s().\n", comp_current_index, $5, $7->def->name));
+
+
         /* this comp will be 'previous' for the next, except if removed at include */
         if (!comp->removable) previous_comp = comp;
         (yyval.instance) = comp;
 
       }
-#line 2965 "instrument.tab.c"
+#line 2974 "instrument.tab.c"
     break;
 
   case 98: /* split: %empty  */
-#line 1314 "instrument.y"
+#line 1315 "instrument.y"
       {
         (yyval.exp) = NULL;
       }
-#line 2973 "instrument.tab.c"
+#line 2982 "instrument.tab.c"
     break;
 
   case 99: /* split: "SPLIT"  */
-#line 1318 "instrument.y"
+#line 1319 "instrument.y"
       {
         (yyval.exp) = exp_number("10");
       }
-#line 2981 "instrument.tab.c"
+#line 2990 "instrument.tab.c"
     break;
 
   case 100: /* split: "SPLIT" exp  */
-#line 1322 "instrument.y"
+#line 1323 "instrument.y"
       {
         (yyval.exp) = (yyvsp[0].exp);
       }
-#line 2989 "instrument.tab.c"
+#line 2998 "instrument.tab.c"
     break;
 
   case 101: /* actuallist: '(' actuals ')'  */
-#line 1329 "instrument.y"
+#line 1330 "instrument.y"
       {
         (yyval.actuals) = (yyvsp[-1].actuals);
       }
-#line 2997 "instrument.tab.c"
+#line 3006 "instrument.tab.c"
     break;
 
   case 102: /* actuals: %empty  */
-#line 1335 "instrument.y"
+#line 1336 "instrument.y"
       {
         (yyval.actuals) = symtab_create();
       }
-#line 3005 "instrument.tab.c"
+#line 3014 "instrument.tab.c"
     break;
 
   case 103: /* actuals: actuals1  */
-#line 1339 "instrument.y"
+#line 1340 "instrument.y"
       {
         (yyval.actuals) = (yyvsp[0].actuals);
       }
-#line 3013 "instrument.tab.c"
+#line 3022 "instrument.tab.c"
     break;
 
   case 104: /* actuals1: TOK_ID '=' exp  */
-#line 1345 "instrument.y"
+#line 1346 "instrument.y"
       {
         (yyval.actuals) = symtab_create();
         symtab_add((yyval.actuals), (yyvsp[-2].string), (yyvsp[0].exp));
         str_free((yyvsp[-2].string));
       }
-#line 3023 "instrument.tab.c"
+#line 3032 "instrument.tab.c"
     break;
 
   case 105: /* actuals1: actuals1 ',' TOK_ID '=' exp  */
-#line 1351 "instrument.y"
+#line 1352 "instrument.y"
       {
         symtab_add((yyvsp[-4].actuals), (yyvsp[-2].string), (yyvsp[0].exp));
         str_free((yyvsp[-2].string));
         (yyval.actuals) = (yyvsp[-4].actuals);
       }
-#line 3033 "instrument.tab.c"
+#line 3042 "instrument.tab.c"
     break;
 
   case 106: /* when: %empty  */
-#line 1359 "instrument.y"
+#line 1360 "instrument.y"
     {
       (yyval.exp) = NULL;
     }
-#line 3041 "instrument.tab.c"
+#line 3050 "instrument.tab.c"
     break;
 
   case 107: /* when: "WHEN" exp  */
-#line 1363 "instrument.y"
+#line 1364 "instrument.y"
     {
       (yyval.exp) = (yyvsp[0].exp);
     }
-#line 3049 "instrument.tab.c"
+#line 3058 "instrument.tab.c"
     break;
 
   case 108: /* place: "AT" coords reference  */
-#line 1369 "instrument.y"
+#line 1370 "instrument.y"
       {
         (yyval.place).place = (yyvsp[-1].coords);
         (yyval.place).place_rel = (yyvsp[0].instance);
       }
-#line 3058 "instrument.tab.c"
+#line 3067 "instrument.tab.c"
     break;
 
   case 109: /* orientation: %empty  */
-#line 1376 "instrument.y"
+#line 1377 "instrument.y"
       {
         (yyval.ori).orientation = coords_exp_origo(); /* Default to (0,0,0). */
         (yyval.ori).isdefault = 1; /* No ROTATED modifier was present */
       }
-#line 3067 "instrument.tab.c"
+#line 3076 "instrument.tab.c"
     break;
 
   case 110: /* orientation: "ROTATED" coords reference  */
-#line 1381 "instrument.y"
+#line 1382 "instrument.y"
       {
         (yyval.ori).orientation = (yyvsp[-1].coords);
         (yyval.ori).orientation_rel = (yyvsp[0].instance);
         (yyval.ori).isdefault = 0;
       }
-#line 3077 "instrument.tab.c"
+#line 3086 "instrument.tab.c"
     break;
 
   case 111: /* reference: "ABSOLUTE"  */
-#line 1390 "instrument.y"
+#line 1391 "instrument.y"
       {
         (yyval.instance) = NULL;
       }
-#line 3085 "instrument.tab.c"
+#line 3094 "instrument.tab.c"
     break;
 
   case 112: /* reference: "RELATIVE" "ABSOLUTE"  */
-#line 1394 "instrument.y"
+#line 1395 "instrument.y"
       {
         (yyval.instance) = NULL; /* tolerate this reference error */
       }
-#line 3093 "instrument.tab.c"
+#line 3102 "instrument.tab.c"
     break;
 
   case 113: /* reference: "RELATIVE" compref  */
-#line 1398 "instrument.y"
+#line 1399 "instrument.y"
       {
         (yyval.instance) = (yyvsp[0].instance);
       }
-#line 3101 "instrument.tab.c"
+#line 3110 "instrument.tab.c"
     break;
 
   case 114: /* groupref: %empty  */
-#line 1405 "instrument.y"
+#line 1406 "instrument.y"
       {
         (yyval.groupinst) = NULL;
       }
-#line 3109 "instrument.tab.c"
+#line 3118 "instrument.tab.c"
     break;
 
   case 115: /* groupref: "GROUP" groupdef  */
-#line 1409 "instrument.y"
+#line 1410 "instrument.y"
       {
         (yyval.groupinst) = (yyvsp[0].groupinst);
       }
-#line 3117 "instrument.tab.c"
+#line 3126 "instrument.tab.c"
     break;
 
   case 116: /* groupdef: TOK_ID  */
-#line 1415 "instrument.y"
+#line 1416 "instrument.y"
       {
         struct group_inst *group;
         struct Symtab_entry *ent;
@@ -3136,14 +3145,14 @@ yyreduce:
           list_add(group_instances_list, group);
         }
         else
-          group = ent->val;
+          group = (group_inst*) ent->val;
         (yyval.groupinst) = group;
       }
-#line 3143 "instrument.tab.c"
+#line 3152 "instrument.tab.c"
     break;
 
   case 117: /* compref: "PREVIOUS"  */
-#line 1439 "instrument.y"
+#line 1440 "instrument.y"
       {
         if (previous_comp) {
           (yyval.instance) = previous_comp;
@@ -3152,11 +3161,11 @@ yyreduce:
           (yyval.instance) = NULL;
         }
       }
-#line 3156 "instrument.tab.c"
+#line 3165 "instrument.tab.c"
     break;
 
   case 118: /* compref: "PREVIOUS" '(' TOK_NUMBER ')'  */
-#line 1448 "instrument.y"
+#line 1449 "instrument.y"
       {
         /* get the $3 previous item in comp_instances */
         struct Symtab_entry *entry;
@@ -3167,14 +3176,14 @@ yyreduce:
           print_warn(NULL, "Found invalid PREVIOUS(%i) reference at line %s:%d. Using ABSOLUTE.\n", index, instr_current_filename, instr_current_line);
           (yyval.instance) = NULL;
         } else {
-          (yyval.instance) = entry->val;
+          (yyval.instance) = (comp_inst*) entry->val;
         }
       }
-#line 3174 "instrument.tab.c"
+#line 3183 "instrument.tab.c"
     break;
 
   case 119: /* compref: TOK_ID  */
-#line 1462 "instrument.y"
+#line 1463 "instrument.y"
       {
         struct comp_inst *comp;
         struct Symtab_entry *ent;
@@ -3185,75 +3194,75 @@ yyreduce:
           print_error("ERROR: Reference to undefined component instance %s at line %s:%d.\n",
           (yyvsp[0].string), instr_current_filename, instr_current_line);
         else
-          comp = ent->val;
+          comp = (comp_inst*) ent->val;
         str_free((yyvsp[0].string));
         (yyval.instance) = comp;
       }
-#line 3193 "instrument.tab.c"
+#line 3202 "instrument.tab.c"
     break;
 
   case 120: /* coords: '(' exp ',' exp ',' exp ')'  */
-#line 1479 "instrument.y"
+#line 1480 "instrument.y"
       {
         (yyval.coords).x = (yyvsp[-5].exp);
         (yyval.coords).y = (yyvsp[-3].exp);
         (yyval.coords).z = (yyvsp[-1].exp);
       }
-#line 3203 "instrument.tab.c"
+#line 3212 "instrument.tab.c"
     break;
 
   case 121: /* extend: %empty  */
-#line 1488 "instrument.y"
+#line 1489 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
       }
-#line 3211 "instrument.tab.c"
+#line 3220 "instrument.tab.c"
     break;
 
   case 122: /* extend: "EXTEND" codeblock  */
-#line 1492 "instrument.y"
+#line 1493 "instrument.y"
       {
         (yyval.ccode) = (yyvsp[0].ccode);
       }
-#line 3219 "instrument.tab.c"
+#line 3228 "instrument.tab.c"
     break;
 
   case 123: /* metadata: %empty  */
-#line 1498 "instrument.y"
+#line 1499 "instrument.y"
 {
   (yyval.metadata) = list_create();
 }
-#line 3227 "instrument.tab.c"
+#line 3236 "instrument.tab.c"
     break;
 
   case 124: /* metadata: metadata1  */
-#line 1502 "instrument.y"
+#line 1503 "instrument.y"
 {
   (yyval.metadata) = (yyvsp[0].metadata);
-}
-#line 3235 "instrument.tab.c"
-    break;
-
-  case 125: /* metadata1: metadatum  */
-#line 1508 "instrument.y"
-{
-  (yyval.metadata) = list_create();
-  list_add((yyval.metadata), (yyvsp[0].metadatum));
 }
 #line 3244 "instrument.tab.c"
     break;
 
-  case 126: /* metadata1: metadata1 metadatum  */
-#line 1513 "instrument.y"
+  case 125: /* metadata1: metadatum  */
+#line 1509 "instrument.y"
 {
-  list_add((yyvsp[-1].metadata), (yyvsp[0].metadatum));
-  (yyval.metadata) = (yyvsp[-1].metadata);
+  (yyval.metadata) = list_create();
+  list_add((yyval.metadata), (yyvsp[0].metadatum));
 }
 #line 3253 "instrument.tab.c"
     break;
 
+  case 126: /* metadata1: metadata1 metadatum  */
+#line 1514 "instrument.y"
+{
+  list_add((yyvsp[-1].metadata), (yyvsp[0].metadatum));
+  (yyval.metadata) = (yyvsp[-1].metadata);
+}
+#line 3262 "instrument.tab.c"
+    break;
+
   case 127: /* metadatum: "METADATA" TOK_ID TOK_ID codeblock  */
-#line 1522 "instrument.y"
+#line 1523 "instrument.y"
 {
   struct metadata_struct * metadatum;
   palloc(metadatum);
@@ -3263,28 +3272,28 @@ yyreduce:
   metadatum->lines = list_create(); if (list_len((yyvsp[0].ccode)->lines)) list_cat(metadatum->lines, (yyvsp[0].ccode)->lines);
   (yyval.metadatum) = metadatum; // This would be very bad to omit. Don't do that!
 }
-#line 3267 "instrument.tab.c"
+#line 3276 "instrument.tab.c"
     break;
 
   case 128: /* metadatum: "METADATA" TOK_ID TOK_STRING codeblock  */
-#line 1533 "instrument.y"
+#line 1534 "instrument.y"
 {
   struct metadata_struct * metadatum;
   palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup((yyvsp[-2].string));
-  char * tmp_key = malloc(((strlen((yyvsp[-1].string))+3)*sizeof(char)));
+  char * tmp_key = (char*) malloc(((strlen((yyvsp[-1].string))+3)*sizeof(char)));
   sprintf(tmp_key, "\"%s\"", (yyvsp[-1].string));
   metadatum->name = str_quote(tmp_key);
   free(tmp_key);
   metadatum->lines = list_create(); if (list_len((yyvsp[0].ccode)->lines)) list_cat(metadatum->lines, (yyvsp[0].ccode)->lines);
   (yyval.metadatum) = metadatum; // This would be very bad to omit. Don't do that!
 }
-#line 3284 "instrument.tab.c"
+#line 3293 "instrument.tab.c"
     break;
 
   case 129: /* metadatum: "METADATA" TOK_STRING TOK_ID codeblock  */
-#line 1548 "instrument.y"
+#line 1549 "instrument.y"
 {
   struct metadata_struct * metadatum;
   palloc(metadatum);
@@ -3294,62 +3303,62 @@ yyreduce:
   metadatum->lines = list_create(); if (list_len((yyvsp[0].ccode)->lines)) list_cat(metadatum->lines, (yyvsp[0].ccode)->lines);
   (yyval.metadatum) = metadatum; // This would be very bad to omit. Don't do that!
 }
-#line 3298 "instrument.tab.c"
+#line 3307 "instrument.tab.c"
     break;
 
   case 130: /* metadatum: "METADATA" TOK_STRING TOK_STRING codeblock  */
-#line 1559 "instrument.y"
+#line 1560 "instrument.y"
 {
   struct metadata_struct * metadatum;
   palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup((yyvsp[-2].string));
-  char * tmp_key = malloc(((strlen((yyvsp[-1].string))+3)*sizeof(char)));
+  char * tmp_key = (char*) malloc(((strlen((yyvsp[-1].string))+3)*sizeof(char)));
   sprintf(tmp_key, "\"%s\"", (yyvsp[-1].string));
   metadatum->name = str_quote(tmp_key);
   free(tmp_key);
   metadatum->lines = list_create(); if (list_len((yyvsp[0].ccode)->lines)) list_cat(metadatum->lines, (yyvsp[0].ccode)->lines);
   (yyval.metadatum) = metadatum; // This would be very bad to omit. Don't do that!
 }
-#line 3315 "instrument.tab.c"
+#line 3324 "instrument.tab.c"
     break;
 
   case 131: /* jumps: %empty  */
-#line 1575 "instrument.y"
+#line 1576 "instrument.y"
     {
       (yyval.jumps) = list_create();
     }
-#line 3323 "instrument.tab.c"
+#line 3332 "instrument.tab.c"
     break;
 
   case 132: /* jumps: jumps1  */
-#line 1579 "instrument.y"
+#line 1580 "instrument.y"
     {
       (yyval.jumps) = (yyvsp[0].jumps);
-    }
-#line 3331 "instrument.tab.c"
-    break;
-
-  case 133: /* jumps1: jump  */
-#line 1585 "instrument.y"
-    {
-      (yyval.jumps) = list_create();
-      list_add((yyval.jumps), (yyvsp[0].jump));
     }
 #line 3340 "instrument.tab.c"
     break;
 
-  case 134: /* jumps1: jumps1 jump  */
-#line 1590 "instrument.y"
+  case 133: /* jumps1: jump  */
+#line 1586 "instrument.y"
     {
-      list_add((yyvsp[-1].jumps), (yyvsp[0].jump));
-      (yyval.jumps) = (yyvsp[-1].jumps);
+      (yyval.jumps) = list_create();
+      list_add((yyval.jumps), (yyvsp[0].jump));
     }
 #line 3349 "instrument.tab.c"
     break;
 
+  case 134: /* jumps1: jumps1 jump  */
+#line 1591 "instrument.y"
+    {
+      list_add((yyvsp[-1].jumps), (yyvsp[0].jump));
+      (yyval.jumps) = (yyvsp[-1].jumps);
+    }
+#line 3358 "instrument.tab.c"
+    break;
+
   case 135: /* jump: "JUMP" jumpname jumpcondition  */
-#line 1597 "instrument.y"
+#line 1598 "instrument.y"
     {
       struct jump_struct *jump;
       palloc(jump);
@@ -3359,89 +3368,89 @@ yyreduce:
       jump->iterate    = (yyvsp[0].jumpcondition).iterate;
       (yyval.jump)=jump;
     }
-#line 3363 "instrument.tab.c"
+#line 3372 "instrument.tab.c"
     break;
 
   case 136: /* jumpcondition: "WHEN" exp  */
-#line 1609 "instrument.y"
+#line 1610 "instrument.y"
     {
       (yyval.jumpcondition).condition = (yyvsp[0].exp);
       (yyval.jumpcondition).iterate   = 0;
     }
-#line 3372 "instrument.tab.c"
+#line 3381 "instrument.tab.c"
     break;
 
   case 137: /* jumpcondition: "ITERATE" exp  */
-#line 1614 "instrument.y"
+#line 1615 "instrument.y"
     {
       (yyval.jumpcondition).condition = (yyvsp[0].exp);
       (yyval.jumpcondition).iterate   = 1;
     }
-#line 3381 "instrument.tab.c"
+#line 3390 "instrument.tab.c"
     break;
 
   case 138: /* jumpname: "PREVIOUS"  */
-#line 1621 "instrument.y"
+#line 1622 "instrument.y"
     {
       (yyval.jumpname).name  = str_dup("PREVIOUS");
       (yyval.jumpname).index = -1;
     }
-#line 3390 "instrument.tab.c"
+#line 3399 "instrument.tab.c"
     break;
 
   case 139: /* jumpname: "PREVIOUS" '(' TOK_NUMBER ')'  */
-#line 1626 "instrument.y"
+#line 1627 "instrument.y"
     {
       (yyval.jumpname).name  = str_cat("PREVIOUS_", (yyvsp[-1].number), NULL);
       (yyval.jumpname).index = -atoi((yyvsp[-1].number));
     }
-#line 3399 "instrument.tab.c"
+#line 3408 "instrument.tab.c"
     break;
 
   case 140: /* jumpname: "MYSELF"  */
-#line 1631 "instrument.y"
+#line 1632 "instrument.y"
     {
       (yyval.jumpname).name  = str_dup("MYSELF");
       (yyval.jumpname).index = 0;
     }
-#line 3408 "instrument.tab.c"
+#line 3417 "instrument.tab.c"
     break;
 
   case 141: /* jumpname: "NEXT"  */
-#line 1636 "instrument.y"
+#line 1637 "instrument.y"
     {
       (yyval.jumpname).name  = str_dup("NEXT");;
       (yyval.jumpname).index = +1;
     }
-#line 3417 "instrument.tab.c"
+#line 3426 "instrument.tab.c"
     break;
 
   case 142: /* jumpname: "NEXT" '(' TOK_NUMBER ')'  */
-#line 1641 "instrument.y"
+#line 1642 "instrument.y"
     {
       (yyval.jumpname).name  = str_cat("NEXT_", (yyvsp[-1].number), NULL);
       (yyval.jumpname).index = +atoi((yyvsp[-1].number));    }
-#line 3425 "instrument.tab.c"
+#line 3434 "instrument.tab.c"
     break;
 
   case 143: /* jumpname: TOK_ID  */
-#line 1645 "instrument.y"
+#line 1646 "instrument.y"
     {
       (yyval.jumpname).name  = str_dup((yyvsp[0].string));
       (yyval.jumpname).index = 0;
     }
-#line 3434 "instrument.tab.c"
+#line 3443 "instrument.tab.c"
     break;
 
   case 144: /* shell: %empty  */
-#line 1653 "instrument.y"
+#line 1654 "instrument.y"
     {
     }
-#line 3441 "instrument.tab.c"
+#line 3450 "instrument.tab.c"
     break;
 
   case 145: /* shell: "SHELL" TOK_STRING  */
-#line 1656 "instrument.y"
+#line 1657 "instrument.y"
     {
       printf("Executing: %s ... ",(yyvsp[0].string));
       int ret_val = system((yyvsp[0].string));
@@ -3452,19 +3461,19 @@ yyreduce:
 	printf("success!\n");
       }
     }
-#line 3456 "instrument.tab.c"
+#line 3465 "instrument.tab.c"
     break;
 
   case 146: /* search: "SEARCH" TOK_STRING  */
-#line 1668 "instrument.y"
+#line 1669 "instrument.y"
     {
       add_search_dir((yyvsp[0].string));
     }
-#line 3464 "instrument.tab.c"
+#line 3473 "instrument.tab.c"
     break;
 
   case 147: /* search: "SEARCH" "SHELL" TOK_STRING  */
-#line 1672 "instrument.y"
+#line 1673 "instrument.y"
     {
       FILE *sfp;
       char svalue[1025];
@@ -3475,7 +3484,7 @@ yyreduce:
       }
       while (fgets(svalue, sizeof(svalue), sfp) != NULL){
         // Make a copy of the char array -- We can't free this memory until the program is done, so we're going to leak it :/
-        char * path = calloc(strlen(svalue)+1, sizeof(char));
+        char * path = (char*) calloc(strlen(svalue)+1, sizeof(char));
         strcpy(path, svalue);
         // Remove the trailing newline (and/or carriage return) which is almost-certainly present
         path[strcspn(path, "\r\n")] = 0;
@@ -3488,38 +3497,38 @@ yyreduce:
       }
       pclose(sfp);
     }
-#line 3492 "instrument.tab.c"
+#line 3501 "instrument.tab.c"
     break;
 
   case 148: /* dependency: %empty  */
-#line 1698 "instrument.y"
+#line 1699 "instrument.y"
     {
     }
-#line 3499 "instrument.tab.c"
+#line 3508 "instrument.tab.c"
     break;
 
   case 149: /* dependency: "DEPENDENCY" TOK_STRING  */
-#line 1701 "instrument.y"
+#line 1702 "instrument.y"
     {
       if (strstr(instrument_definition->dependency,(yyvsp[0].string)) == NULL) {
 	strncat(instrument_definition->dependency, " ", 1024);
 	strncat(instrument_definition->dependency, (yyvsp[0].string), 1023); // 1023 because we already appended a space
       }
     }
-#line 3510 "instrument.tab.c"
+#line 3519 "instrument.tab.c"
     break;
 
   case 150: /* noacc: %empty  */
-#line 1709 "instrument.y"
+#line 1710 "instrument.y"
     {
       /* Comp class should work on GPU */
       (yyval.linenum) = 0;
     }
-#line 3519 "instrument.tab.c"
+#line 3528 "instrument.tab.c"
     break;
 
   case 151: /* noacc: "NOACC"  */
-#line 1714 "instrument.y"
+#line 1715 "instrument.y"
     {
       /* Comp class is CPU only */
       (yyval.linenum) = 1;
@@ -3527,45 +3536,45 @@ yyreduce:
 	strncat(instrument_definition->dependency, " -DFUNNEL ", 1024);
       }
     }
-#line 3531 "instrument.tab.c"
+#line 3540 "instrument.tab.c"
     break;
 
   case 152: /* @3: %empty  */
-#line 1724 "instrument.y"
+#line 1725 "instrument.y"
           { (yyval.linenum) = instr_current_line; }
-#line 3537 "instrument.tab.c"
+#line 3546 "instrument.tab.c"
     break;
 
   case 153: /* exp: @3 topexp  */
-#line 1725 "instrument.y"
+#line 1726 "instrument.y"
       {
         CExp e = (yyvsp[0].exp);
         exp_setlineno(e, (yyvsp[-1].linenum) );
         (yyval.exp) = e;
       }
-#line 3547 "instrument.tab.c"
+#line 3556 "instrument.tab.c"
     break;
 
   case 154: /* topexp: topatexp  */
-#line 1733 "instrument.y"
+#line 1734 "instrument.y"
       {
         (yyval.exp) = (yyvsp[0].exp);
       }
-#line 3555 "instrument.tab.c"
+#line 3564 "instrument.tab.c"
     break;
 
   case 155: /* topexp: topexp topatexp  */
-#line 1737 "instrument.y"
+#line 1738 "instrument.y"
       {
         (yyval.exp) = exp_compound(2, (yyvsp[-1].exp), (yyvsp[0].exp));
         exp_free((yyvsp[0].exp));
         exp_free((yyvsp[-1].exp));
       }
-#line 3565 "instrument.tab.c"
+#line 3574 "instrument.tab.c"
     break;
 
   case 156: /* topatexp: "PREVIOUS"  */
-#line 1747 "instrument.y"
+#line 1748 "instrument.y"
       {
         if (previous_comp) {
           (yyval.exp) = exp_ctoken(previous_comp->name);
@@ -3573,19 +3582,19 @@ yyreduce:
           print_error("ERROR: Found invalid PREVIOUS reference at line %s:%d. Please fix (add a component instance before).\n", instr_current_filename, instr_current_line);
         }
       }
-#line 3577 "instrument.tab.c"
+#line 3586 "instrument.tab.c"
     break;
 
   case 157: /* topatexp: "MYSELF"  */
-#line 1755 "instrument.y"
+#line 1756 "instrument.y"
       {
         (yyval.exp) = exp_ctoken(myself_comp->name);
       }
-#line 3585 "instrument.tab.c"
+#line 3594 "instrument.tab.c"
     break;
 
   case 158: /* topatexp: TOK_ID  */
-#line 1760 "instrument.y"
+#line 1761 "instrument.y"
       {
         List_handle liter=NULL;
         struct instr_formal *formal;
@@ -3596,7 +3605,7 @@ yyreduce:
         if (instrument_definition->formals)
           liter = list_iterate(instrument_definition->formals);
         if (liter)
-	          while((formal = list_next(liter)))
+	          while((formal = (instr_formal*) list_next(liter)))
         {
           if((yyvsp[0].string) && formal->id && strcmp((yyvsp[0].string), "NULL") && !strcmp((yyvsp[0].string), formal->id))
           {
@@ -3611,62 +3620,62 @@ yyreduce:
       found:
         str_free((yyvsp[0].string));
       }
-#line 3615 "instrument.tab.c"
+#line 3624 "instrument.tab.c"
     break;
 
   case 159: /* topatexp: TOK_NUMBER  */
-#line 1786 "instrument.y"
+#line 1787 "instrument.y"
       {
         (yyval.exp) = exp_number((yyvsp[0].number));
         str_free((yyvsp[0].number));
       }
-#line 3624 "instrument.tab.c"
-    break;
-
-  case 160: /* topatexp: TOK_STRING  */
-#line 1791 "instrument.y"
-      {
-        (yyval.exp) = exp_string((yyvsp[0].string));
-        str_free((yyvsp[0].string));
-      }
 #line 3633 "instrument.tab.c"
     break;
 
-  case 161: /* topatexp: TOK_CTOK  */
-#line 1796 "instrument.y"
+  case 160: /* topatexp: TOK_STRING  */
+#line 1792 "instrument.y"
       {
-        (yyval.exp) = exp_ctoken((yyvsp[0].string));
+        (yyval.exp) = exp_string((yyvsp[0].string));
         str_free((yyvsp[0].string));
       }
 #line 3642 "instrument.tab.c"
     break;
 
+  case 161: /* topatexp: TOK_CTOK  */
+#line 1797 "instrument.y"
+      {
+        (yyval.exp) = exp_ctoken((yyvsp[0].string));
+        str_free((yyvsp[0].string));
+      }
+#line 3651 "instrument.tab.c"
+    break;
+
   case 162: /* topatexp: '='  */
-#line 1801 "instrument.y"
+#line 1802 "instrument.y"
       {
         (yyval.exp) = exp_ctoken("=");
       }
-#line 3650 "instrument.tab.c"
+#line 3659 "instrument.tab.c"
     break;
 
   case 163: /* topatexp: '*'  */
-#line 1805 "instrument.y"
+#line 1806 "instrument.y"
       {
         (yyval.exp) = exp_ctoken("*");
       }
-#line 3658 "instrument.tab.c"
+#line 3667 "instrument.tab.c"
     break;
 
   case 164: /* topatexp: '/'  */
-#line 1809 "instrument.y"
+#line 1810 "instrument.y"
       {
         (yyval.exp) = exp_ctoken("/");
       }
-#line 3666 "instrument.tab.c"
+#line 3675 "instrument.tab.c"
     break;
 
   case 165: /* topatexp: '(' genexp ')'  */
-#line 1813 "instrument.y"
+#line 1814 "instrument.y"
       {
         CExp p1 = exp_ctoken("(");
         CExp p2 = exp_ctoken(")");
@@ -3675,11 +3684,11 @@ yyreduce:
         exp_free(p1);
         exp_free((yyvsp[-1].exp));
       }
-#line 3679 "instrument.tab.c"
+#line 3688 "instrument.tab.c"
     break;
 
   case 166: /* topatexp: '(' ')'  */
-#line 1822 "instrument.y"
+#line 1823 "instrument.y"
       {
         CExp p1 = exp_ctoken("(");
         CExp p2 = exp_ctoken(")");
@@ -3687,11 +3696,11 @@ yyreduce:
         exp_free(p2);
         exp_free(p1);
       }
-#line 3691 "instrument.tab.c"
+#line 3700 "instrument.tab.c"
     break;
 
   case 167: /* topatexp: '[' genexp ']'  */
-#line 1830 "instrument.y"
+#line 1831 "instrument.y"
       {
         CExp p1 = exp_ctoken("[");
         CExp p2 = exp_ctoken("]");
@@ -3700,11 +3709,11 @@ yyreduce:
         exp_free(p1);
         exp_free((yyvsp[-1].exp));
       }
-#line 3704 "instrument.tab.c"
+#line 3713 "instrument.tab.c"
     break;
 
   case 168: /* topatexp: '[' ']'  */
-#line 1839 "instrument.y"
+#line 1840 "instrument.y"
       {
         CExp p1 = exp_ctoken("[");
         CExp p2 = exp_ctoken("]");
@@ -3712,11 +3721,11 @@ yyreduce:
         exp_free(p2);
         exp_free(p1);
       }
-#line 3716 "instrument.tab.c"
+#line 3725 "instrument.tab.c"
     break;
 
   case 169: /* topatexp: '{' genexp '}'  */
-#line 1847 "instrument.y"
+#line 1848 "instrument.y"
       {
         CExp p1 = exp_ctoken("{");
         CExp p2 = exp_ctoken("}");
@@ -3725,11 +3734,11 @@ yyreduce:
         exp_free(p1);
         exp_free((yyvsp[-1].exp));
       }
-#line 3729 "instrument.tab.c"
+#line 3738 "instrument.tab.c"
     break;
 
   case 170: /* topatexp: '{' '}'  */
-#line 1856 "instrument.y"
+#line 1857 "instrument.y"
       {
         CExp p1 = exp_ctoken("{");
         CExp p2 = exp_ctoken("}");
@@ -3737,73 +3746,73 @@ yyreduce:
         exp_free(p2);
         exp_free(p1);
       }
-#line 3741 "instrument.tab.c"
+#line 3750 "instrument.tab.c"
     break;
 
   case 171: /* genexp: genatexp  */
-#line 1867 "instrument.y"
+#line 1868 "instrument.y"
       {
         (yyval.exp) = (yyvsp[0].exp);
       }
-#line 3749 "instrument.tab.c"
+#line 3758 "instrument.tab.c"
     break;
 
   case 172: /* genexp: genexp genatexp  */
-#line 1871 "instrument.y"
+#line 1872 "instrument.y"
       {
         (yyval.exp) = exp_compound(2, (yyvsp[-1].exp), (yyvsp[0].exp));
         exp_free((yyvsp[0].exp));
         exp_free((yyvsp[-1].exp));
       }
-#line 3759 "instrument.tab.c"
+#line 3768 "instrument.tab.c"
     break;
 
   case 173: /* genatexp: topatexp  */
-#line 1879 "instrument.y"
+#line 1880 "instrument.y"
       {
         (yyval.exp) = (yyvsp[0].exp);
       }
-#line 3767 "instrument.tab.c"
+#line 3776 "instrument.tab.c"
     break;
 
   case 174: /* genatexp: ','  */
-#line 1883 "instrument.y"
+#line 1884 "instrument.y"
       {
         (yyval.exp) = exp_ctoken(",");
       }
-#line 3775 "instrument.tab.c"
+#line 3784 "instrument.tab.c"
     break;
 
   case 175: /* codeblock: TOK_CODE_START code TOK_CODE_END  */
-#line 1891 "instrument.y"
+#line 1892 "instrument.y"
       {
         (yyvsp[-1].ccode)->filename = instr_current_filename;
         (yyvsp[-1].ccode)->quoted_filename = str_quote(instr_current_filename);
         (yyvsp[-1].ccode)->linenum = (yyvsp[-2].linenum);
         (yyval.ccode) = (yyvsp[-1].ccode);
       }
-#line 3786 "instrument.tab.c"
+#line 3795 "instrument.tab.c"
     break;
 
   case 176: /* code: %empty  */
-#line 1900 "instrument.y"
+#line 1901 "instrument.y"
       {
         (yyval.ccode) = codeblock_new();
-      }
-#line 3794 "instrument.tab.c"
-    break;
-
-  case 177: /* code: code TOK_CODE_LINE  */
-#line 1905 "instrument.y"
-      {
-        list_add((yyvsp[-1].ccode)->lines, (yyvsp[0].string));
-        (yyval.ccode) = (yyvsp[-1].ccode);
       }
 #line 3803 "instrument.tab.c"
     break;
 
+  case 177: /* code: code TOK_CODE_LINE  */
+#line 1906 "instrument.y"
+      {
+        list_add((yyvsp[-1].ccode)->lines, (yyvsp[0].string));
+        (yyval.ccode) = (yyvsp[-1].ccode);
+      }
+#line 3812 "instrument.tab.c"
+    break;
 
-#line 3807 "instrument.tab.c"
+
+#line 3816 "instrument.tab.c"
 
       default: break;
     }
@@ -3996,7 +4005,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 1911 "instrument.y"
+#line 1912 "instrument.y"
 
 
 /* end of grammar *********************************************************** */
@@ -4355,7 +4364,7 @@ check_comp_formals(List deflist, List setlist, char *compname)
      symbol table is an error. */
   formals = symtab_create();
   liter = list_iterate(deflist);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     if (!formal->id || !strlen(formal->id))
       print_error("ERROR: Definition parameter name %s is empty (length=0) "
@@ -4369,7 +4378,7 @@ check_comp_formals(List deflist, List setlist, char *compname)
   }
   list_iterate_end(liter);
   liter = list_iterate(setlist);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     if (!formal->id || !strlen(formal->id))
       print_error("ERROR: Setting parameter name %s is empty (length=0) "
@@ -4398,7 +4407,7 @@ check_instrument_formals(List formallist, char *instrname)
   /* We check the uniqueness. Any formal parameter that already appears in the
      formal list is reported. */
   liter = list_iterate(formallist);
-  while((formal = list_next(liter))) {
+  while((formal = (instr_formal*) list_next(liter))) {
     if (!formal->id || !strlen(formal->id))
       continue;
       // print_error("ERROR: Instrument parameter name %s is empty (length=0) "
@@ -4409,7 +4418,7 @@ check_instrument_formals(List formallist, char *instrname)
         struct instr_formal *formal2;
 
         liter2 = list_iterate(formallist);
-        while((formal2 = list_next(liter2))) {
+        while((formal2 = (instr_formal*) list_next(liter2))) {
         	if (formal != formal2 && strlen(formal2->id) && !strcmp(formal->id, formal2->id)) {
         		strcpy(formal2->id, "");  /* inactivate recurrent previous definition */
         		if (verbose) print_warn(NULL, "Instrument parameter name %s is used multiple times "
@@ -4446,7 +4455,7 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
 
   /* definition parameters */
   liter = list_iterate(comp->def->def_par);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     entry = symtab_lookup(actuals, formal->id);
     if(entry == NULL)
@@ -4468,12 +4477,12 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
          necessary to avoid duplication of computations or side effects in the
          expressions for the actual parameters, since DEFINITION parameters
          are assigned using #define's. */
-      if(!exp_isvalue(entry->val))
+      if(!exp_isvalue((cexp*) entry->val))
       {
         print_warn(NULL, "Warning: Using DEFINITION parameter of component %s() (potential syntax error) at line %s:%d\n"
           "  %s=%s\n",
           comp->def->name, instr_current_filename, instr_current_line,
-          formal->id, exp_tostring(entry->val));
+          formal->id, exp_tostring((cexp*) entry->val));
       }
     }
   }
@@ -4481,7 +4490,7 @@ comp_formals_actuals(struct comp_inst *comp, Symtab actuals)
 
   /* setting parameters */
   liter = list_iterate(comp->def->set_par);
-  while((formal = list_next(liter)))
+  while((formal = (comp_iformal*) list_next(liter)))
   {
     entry = symtab_lookup(actuals, formal->id);
     if(entry == NULL)
@@ -4571,7 +4580,7 @@ read_component(char *name)
   entry = symtab_lookup(read_components, name);
   if(entry != NULL)
   {
-    return entry->val;    /* Return it if found. */
+    return (comp_def*) entry->val;    /* Return it if found. */
   }
   else
   {
@@ -4602,7 +4611,7 @@ read_component(char *name)
     entry = symtab_lookup(read_components, name);
     if(entry != NULL)
     {
-      return entry->val;
+      return (comp_def*) entry->val;
     }
     else
     {

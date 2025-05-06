@@ -84,6 +84,7 @@
 #define MC_PATHSEP_C '/'
 #define FLAVOR_UPPER "TT"
 #define FLAVOR "tt"
+#define MCCODE_BUGREPORT "mcstas.org"
 
 
 // utils
