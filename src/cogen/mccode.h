@@ -81,7 +81,9 @@
 
 
 #define MC_PATHSEP_S "/"
+#define MC_PATHSEP_C '/'
 #define FLAVOR_UPPER "TT"
+#define FLAVOR "tt"
 
 
 // utils
@@ -235,6 +237,7 @@ int  re_matchp(re_t pattern, const char* text);
 /* Find matches of the txt pattern inside text (will compile automatically first). */
 int  re_match(const char* pattern, const char* text);
 
+#include "re.c"
 
 /*******************************************************************************
 * Definitions for cogen.c
@@ -310,12 +313,12 @@ extern int debug_current_level;
 
 /* Code blocks. */
 struct code_block
-  {
+{
     char *filename;   /* Name of origin source file. */
     char *quoted_filename;  /* Same, quoted for inclusion in C code. */
     int linenum;    /* Line number of first line. */
     List lines;     /* List of lines (strings with \n at end). */
-  };
+};
 
 /* Note: the enum instr_formal_types definition MUST be kept
    synchronized with the one in mccode-r.h. */

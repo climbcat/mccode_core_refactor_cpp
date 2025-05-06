@@ -1,3 +1,7 @@
+#ifndef __MC_COGEN_H__
+#define __MC_COGEN_H__
+
+
 /*******************************************************************************
 *
 * McCode system component cogen.c.in:
@@ -24,10 +28,10 @@
 *
 *******************************************************************************/
 
+
 #include <stdarg.h>
 #include <string.h>
 #include <stdio.h>
-#include "mccode.h"
 
 
 /*******************************************************************************
@@ -78,7 +82,8 @@
 
 /* PROJECT=1 for McStas, 2 for McXtrace. Now using @MCCODE_PARTICLE@ @MCCODE_NAME@ */
 #ifndef MCCODE_PROJECT
-#define MCCODE_PROJECT @MCCODE_PROJECT@
+//#define MCCODE_PROJECT @MCCODE_PROJECT@
+#define MCCODE_PROJECT 1
 #endif
 
 #ifndef MCCODE_LIBENV
@@ -124,11 +129,11 @@ static char *quoted_output_file_name = NULL;  /* str_quote()'ed name of output f
 
 /* Convert instrument formal parameter type numbers to their enum name. */
 char *instr_formal_type_names[] =
-  { "instr_type_int", "instr_type_string", "instr_type_char", "instr_type_vector", "instr_type_double", "instr_type_symbol" };
+  { (char*) "instr_type_int", (char*) "instr_type_string", (char*) "instr_type_char", (char*) "instr_type_vector", (char*) "instr_type_double", (char*) "instr_type_symbol" };
 
 /* 'char' and 'MCNUM' are for static array allocations */
 char *instr_formal_type_names_real[] =
-  { "int", "char*", "char", "MCNUM", "MCNUM", "double"};
+  { (char*) "int", (char*) "char*", (char*) "char", (char*) "MCNUM", (char*) "MCNUM", (char*) "double"};
 
 /*******************************************************************************
 * Output a single line of code
@@ -137,8 +142,15 @@ char *instr_formal_type_names_real[] =
 static void
 cout(char *s)
 {
-  fprintf(output_handle, "%s\n", s);
-  num_next_output_line++;
+    fprintf(output_handle, "%s\n", s);
+    num_next_output_line++;
+}
+
+static void
+cout(const char *s)
+{
+    fprintf(output_handle, "%s\n", s);
+    num_next_output_line++;
 }
 
 /*******************************************************************************
@@ -148,13 +160,24 @@ cout(char *s)
 static void
 coutf(char *format, ...)
 {
-  va_list ap;
+    va_list ap;
 
-  va_start(ap, format);
-  vfprintf(output_handle, format, ap);
-  va_end(ap);
-  fprintf(output_handle, "\n");
-  num_next_output_line++;
+    va_start(ap, format);
+    vfprintf(output_handle, format, ap);
+    va_end(ap);
+    fprintf(output_handle, "\n");
+    num_next_output_line++;
+}
+static void
+coutf(const char *format, ...)
+{
+    va_list ap;
+
+    va_start(ap, format);
+    vfprintf(output_handle, format, ap);
+    va_end(ap);
+    fprintf(output_handle, "\n");
+    num_next_output_line++;
 }
 
 /*******************************************************************************
@@ -164,9 +187,9 @@ coutf(char *format, ...)
 static void
 code_set_source(char *filename, int linenum)
 {
-  // jg-20190307: We have disabled line pragmas for now
-  //if(linenum > 0)
-  //  coutf("#line %d \"%s\"", linenum, filename);
+    // jg-20190307: We have disabled line pragmas for now
+    //if(linenum > 0)
+    //  coutf("#line %d \"%s\"", linenum, filename);
 }
 
 /*******************************************************************************
@@ -175,9 +198,9 @@ code_set_source(char *filename, int linenum)
 static void
 code_reset_source(void)
 {
-  // jg-20190307: We have disabled line pragmas for now
-  /* Note: the number after #line refers to the line AFTER the directive. */
-  //coutf("//#line %d \"%s\"", num_next_output_line + 1, quoted_output_file_name);
+    // jg-20190307: We have disabled line pragmas for now
+    /* Note: the number after #line refers to the line AFTER the directive. */
+    //coutf("//#line %d \"%s\"", num_next_output_line + 1, quoted_output_file_name);
 }
 
 /*******************************************************************************
@@ -186,20 +209,20 @@ code_reset_source(void)
 static void
 codeblock_out(struct code_block *code)
 {
-  List_handle liter;                /* For list iteration. */
-  char *line;                       /* Single code line. */
+    List_handle liter;                /* For list iteration. */
+    char *line;                       /* Single code line. */
 
-  if(list_len(code->lines) <= 0)
-    return;
-  code_set_source(code->quoted_filename, code->linenum + 1);
-  liter = list_iterate(code->lines);
-  while((line = list_next(liter)))
-  {
-    fprintf(output_handle, "%s", line);
-    num_next_output_line++;
-  }
-  list_iterate_end(liter);
-  code_reset_source();
+    if(list_len(code->lines) <= 0) return;
+
+    code_set_source(code->quoted_filename, code->linenum + 1);
+    liter = list_iterate(code->lines);
+    while((line = (char*) list_next(liter)))
+    {
+      fprintf(output_handle, "%s", line);
+      num_next_output_line++;
+    }
+    list_iterate_end(liter);
+    code_reset_source();
 }
 
 /*******************************************************************************
@@ -208,22 +231,22 @@ codeblock_out(struct code_block *code)
 static void
 codeblock_out_brace(struct code_block *code)
 {
-  List_handle liter;                /* For list iteration. */
-  char *line;                       /* Single code line. */
+    List_handle liter;                /* For list iteration. */
+    char *line;                       /* Single code line. */
 
-  if(list_len(code->lines) <= 0)
-    return;
-  code_set_source(code->quoted_filename, code->linenum);
-  cout("{");
-  liter = list_iterate(code->lines);
-  while((line = list_next(liter)))
-  {
-    fprintf(output_handle, "%s", line);
-    num_next_output_line++;
-  }
-  list_iterate_end(liter);
-  cout("}");
-  code_reset_source();
+    if(list_len(code->lines) <= 0) return;
+
+    code_set_source(code->quoted_filename, code->linenum);
+    coutf("{");
+    liter = list_iterate(code->lines);
+    while((line = (char*) list_next(liter)))
+    {
+        fprintf(output_handle, "%s", line);
+        num_next_output_line++;
+    }
+    list_iterate_end(liter);
+    coutf("}");
+    code_reset_source();
 }
 
 /** Output the lines of a literal block, encased in double quotes, and with any contained double quotes escaped.
@@ -232,23 +255,24 @@ codeblock_out_brace(struct code_block *code)
  */
 static void
 escaped_lines_out(List lines) {
-  List_handle liter;                /* For list iteration. */
-  char *line;                       /* Single code line. */
-  char * escaped_line;
-  if (list_undef(lines) || list_len(lines) <= 0) {
-    fprintf(output_handle, "\"\"");
-  } else {
-    liter = list_iterate(lines);
-    while((line = list_next(liter)))
-    {
-      //escaped_line = escaped_string(line);
-      escaped_line = str_quote(line);
-      fprintf(output_handle, "\"%s\"\n", escaped_line);
-      memfree(escaped_line); // a copy was made even if nothing was changed
-      num_next_output_line++;
+    List_handle liter;                /* For list iteration. */
+    char *line;                       /* Single code line. */
+    char * escaped_line;
+    if (list_undef(lines) || list_len(lines) <= 0) {
+        fprintf(output_handle, (char*) "\"\"");
     }
-    list_iterate_end(liter);
-  }
+    else {
+        liter = list_iterate(lines);
+        while((line = (char*) list_next(liter)))
+        {
+            //escaped_line = escaped_string(line);
+            escaped_line = str_quote(line);
+            fprintf(output_handle, "\"%s\"\n", escaped_line);
+            memfree(escaped_line); // a copy was made even if nothing was changed
+            num_next_output_line++;
+        }
+        list_iterate_end(liter);
+    }
 }
 
 /*******************************************************************************
@@ -278,7 +302,7 @@ embed_file(char *name)
   FILE *f;
   int last;
 
-  coutf("/* embedding file \"%s\" */", name);
+  coutf( "/* embedding file \"%s\" */", name);
 
   if (!symtab_lookup(lib_instances, name))
   {
@@ -293,7 +317,7 @@ embed_file(char *name)
       else if (verbose) fprintf(stderr, "Embedding file      %s (user path)\n", name);
     } else if (verbose) fprintf(stderr, "Embedding file      %s (%s)\n", name, get_sys_dir());
 
-    cout("");
+    coutf("");
     code_set_source(name, 1);
     /* Now loop, reading lines and outputting them in the code. */
     while(!feof(f))
@@ -308,8 +332,8 @@ embed_file(char *name)
       cout(buf);
     }
     fclose(f);
-    coutf("/* End of file \"%s\". */", name);
-    cout("");
+    coutf( "/* End of file \"%s\". */", name);
+    coutf("");
     code_reset_source();
     symtab_add(lib_instances, name, NULL);
   } /* else file has already been embedded */
@@ -341,18 +365,18 @@ static void cogen_defundef(struct comp_inst *comp, List l, char define_it)
     struct comp_iformal *c_formal;/* Name of component formal input parameter */
 
     liter = list_iterate(l);
-    while((c_formal = list_next(liter))) {
+    while((c_formal = (comp_iformal*) list_next(liter))) {
       int flag_noconflict=1;
 
       if (!c_formal->id || !strlen(c_formal->id))
         continue; // skip invalid parameter names
       switch (define_it) {
       case GLOBAL_INSTANCE_PAR_REF:
-        coutf("  #define %s (_%s_var._parameters.%s)",
+        coutf( "  #define %s (_%s_var._parameters.%s)",
           c_formal->id, comp->name, c_formal->id);
         break;
       case LOCAL_INSTANCE_PAR_REF:
-        coutf("  #define %s (_comp->_parameters.%s)",
+        coutf( "  #define %s (_comp->_parameters.%s)",
           c_formal->id, c_formal->id);
         break;
       case INSTRUMENT_PAR_VALUE:
@@ -367,10 +391,10 @@ static void cogen_defundef(struct comp_inst *comp, List l, char define_it)
 
             if(list_len(l) > 0)
             {
-              List_handle liter = list_iterate(l);
+              List_handle liter = (List_handle) list_iterate(l);
               struct comp_iformal *ci_formal=NULL;/* Name of component formal input parameter */
 
-              while((ci_formal = list_next(liter)))
+              while((ci_formal = (comp_iformal*) list_next(liter)))
                 if (!strcmp(c_formal->id, ci_formal->id)) {
                   flag_noconflict=0; break;
                 }
@@ -378,12 +402,12 @@ static void cogen_defundef(struct comp_inst *comp, List l, char define_it)
           } /* for List */
         }
         if (flag_noconflict && strlen(c_formal->id))
-          coutf("  #define %s (instrument->_parameters.%s)",
+          coutf( "  #define %s (instrument->_parameters.%s)",
             c_formal->id, c_formal->id);
         break;
       case PAR_UNDEF:
       default:
-        coutf("  #undef %s", c_formal->id);
+        coutf( "  #undef %s", c_formal->id);
 
       } /* switch */
     } /* while */
@@ -400,7 +424,7 @@ int var_in_list(List lst, struct comp_iformal* var) {
   List_handle liter;
   liter = list_iterate(lst);
   struct comp_iformal* lst_var;
-  while((lst_var = list_next(liter))) {
+  while((lst_var = (comp_iformal*) list_next(liter))) {
     if (!strcmp(lst_var->id, var->id)) {
       retval = 1;
       break;
@@ -421,143 +445,144 @@ int var_in_list(List lst, struct comp_iformal* var) {
 ***************************************************************************** */
 int cogen_comp_declare(struct comp_inst *comp)
 {
-  int warnings = 0;
-  int nb_parameters = 0;
+    int warnings = 0;
+    int nb_parameters = 0;
 
-  if (!comp->def->flag_defined_structure) {
-    // only once
-    comp->def->flag_defined_structure = 1;
+    if (!comp->def->flag_defined_structure) {
+        // only once
+        comp->def->flag_defined_structure = 1;
 
-    // a comment
-    coutf("/* component %s=%s() [%i] DECLARE */", comp->name, comp->def->name, comp->index);
-    coutf("/* Parameter definition for component type '%s' */", comp->def->name);
-    // start outputting the parameters struct
-    coutf("struct _struct_%s_parameters {", comp->def->name);
+        // a comment
+        coutf( "/* component %s=%s() [%i] DECLARE */", comp->name, comp->def->name, comp->index);
+        coutf( "/* Parameter definition for component type '%s' */", comp->def->name);
+        // start outputting the parameters struct
+        coutf( "struct _struct_%s_parameters {", comp->def->name);
 
-    //
-    // Mix declare vars with output pars: Declare overrides OUTPUT, because the
-    // type of the former are free, while the type of the latter must be part of
-    // the mccode officially recognized parameter types.
-    //
+        //
+        // Mix declare vars with output pars: Declare overrides OUTPUT, because the
+        // type of the former are free, while the type of the latter must be part of
+        // the mccode officially recognized parameter types.
+        //
 
-    // -- step Ia: get vars from declare block
-    comp->def->decl_par = list_create();
-    get_codeblock_vars_allcustom(
-      comp->def->decl_code,  // source
-      comp->def->decl_par,   // type list
-      "DECLARE", "INITIALIZE"); // warning context
+        // -- step Ia: get vars from declare block
+        comp->def->decl_par = list_create();
+        get_codeblock_vars_allcustom(
+          comp->def->decl_code,  // source
+          comp->def->decl_par,   // type list
+          (char*) "DECLARE",
+          (char*) "INITIALIZE"); // warning context
 
-    // -- step IIa: transfer all <output minus decl> pars to a new list
-    List new_out_pars;
-    new_out_pars = list_create();
+        // -- step IIa: transfer all <output minus decl> pars to a new list
+        List new_out_pars;
+        new_out_pars = list_create();
 
-    // Annihilation of OUTPUT/PRIVATE parameter generation
-    /*    List_handle outputiter;
-    outputiter = list_iterate(comp->def->out_par);
-    struct comp_iformal* outpar;
-    while(outpar = list_next(outputiter)) {
-      if (!var_in_list(comp->def->decl_par, outpar)) {
-        list_add(new_out_pars, outpar);
-      }
-    } */
-
-    // -- step IIb: transfer all decl vars to the new list
-    List_handle decliter;
-    decliter = list_iterate(comp->def->decl_par);
-    struct comp_iformal* declvar;
-    while((declvar = list_next(decliter))) {
-      list_add(new_out_pars, declvar);
-    }
-    list_iterate_end(decliter);
-
-    // -- step III: replace previous output pars list with the new (patched) list
-    // TODO: free the previous list first?
-    comp->def->out_par = new_out_pars;
-
-    // now add setting and (patched) output vars to comp struct
-    int index = 0;
-    for (index=0; index<2; index++) {
-      List l = (index == 0 ? comp->def->set_par : comp->def->out_par);
-      if(list_len(l) > 0)
-      {
-        List_handle liter;
-        liter = list_iterate(l);
-
-        struct comp_iformal *c_formal;
-        coutf("  /* Component type '%s' %s parameters */",
-          comp->def->name, index == 0 ? "setting" : "private");
-
-        // write variable to comp struct
-        while((c_formal = list_next(liter)))
-        {
-          nb_parameters++;
-          if (c_formal->type == instr_type_custom) {
-            coutf("  %s %s;", c_formal->type_custom, c_formal->id);
-      int len = re_match("\\[",c_formal->id);
-      if (len>=0) {
-        c_formal->id[len]='\0';
-      }
-          } else if (c_formal->type ==instr_type_vector) {
-      struct Symtab_entry *entry;
-      entry = symtab_lookup(comp->setpar, c_formal->id);
-      char *val = exp_tostring(entry->val); /* replaced by instrument parameter when exists */
-      if (val[0] == '{') {
-        int vl = parse_curlybrackets_vector(val, NULL);
-	printf("\nWARNING:\n The parameter %s of %s is initialized \n using a static {,,,} vector.\n",c_formal->id,comp->name);
-	printf("  -> Such static vectors support literal numbers ONLY.\n");
-	printf("  -> Any vector use of variables or defines must happen via a \n");
-	printf("     DECLARE/INITIALIZE pointer.\n\n");
-        coutf("  %s %s[%i];", instr_formal_type_names_real[c_formal->type], c_formal->id, vl);
-      } else {
-        coutf("  %s* %s;", instr_formal_type_names_real[c_formal->type], c_formal->id);
-      }
-          } else if (c_formal->type != instr_type_string) {
-            coutf("  %s %s;", instr_formal_type_names_real[c_formal->type], c_formal->id);
+        // Annihilation of OUTPUT/PRIVATE parameter generation
+        /*    List_handle outputiter;
+        outputiter = list_iterate(comp->def->out_par);
+        struct comp_iformal* outpar;
+        while(outpar = list_next(outputiter)) {
+          if (!var_in_list(comp->def->decl_par, outpar)) {
+            list_add(new_out_pars, outpar);
           }
-          else  /* array parameter */ {
-            coutf("  %s %s[16384];", instr_formal_type_names_real[c_formal->type+1], c_formal->id);
+        } */
+
+        // -- step IIb: transfer all decl vars to the new list
+        List_handle decliter;
+        decliter = list_iterate(comp->def->decl_par);
+        struct comp_iformal* declvar;
+        while((declvar = (comp_iformal*) list_next(decliter))) {
+          list_add(new_out_pars, declvar);
+        }
+        list_iterate_end(decliter);
+
+        // -- step III: replace previous output pars list with the new (patched) list
+        // TODO: free the previous list first?
+        comp->def->out_par = new_out_pars;
+
+        // now add setting and (patched) output vars to comp struct
+        int index = 0;
+        for (index=0; index<2; index++) {
+          List l = (index == 0 ? comp->def->set_par : comp->def->out_par);
+          if(list_len(l) > 0)
+          {
+            List_handle liter;
+            liter = list_iterate(l);
+
+            struct comp_iformal *c_formal;
+            coutf( "  /* Component type '%s' %s parameters */",
+              comp->def->name, index == 0 ? "setting" : "private");
+
+            // write variable to comp struct
+            while((c_formal = (comp_iformal*) list_next(liter)))
+            {
+              nb_parameters++;
+              if (c_formal->type == instr_type_custom) {
+                coutf( "  %s %s;", c_formal->type_custom, c_formal->id);
+          int len = re_match("\\[",c_formal->id);
+          if (len>=0) {
+            c_formal->id[len]='\0';
           }
-        } /* while c_formal */
+              } else if (c_formal->type ==instr_type_vector) {
+          struct Symtab_entry *entry;
+          entry = symtab_lookup(comp->setpar, c_formal->id);
+          char *val = exp_tostring((cexp*) entry->val); /* replaced by instrument parameter when exists */
+          if (val[0] == '{') {
+            int vl = parse_curlybrackets_vector(val, NULL);
+      printf("\nWARNING:\n The parameter %s of %s is initialized \n using a static {,,,} vector.\n",c_formal->id,comp->name);
+      printf("  -> Such static vectors support literal numbers ONLY.\n");
+      printf("  -> Any vector use of variables or defines must happen via a \n");
+      printf("     DECLARE/INITIALIZE pointer.\n\n");
+            coutf( "  %s %s[%i];", instr_formal_type_names_real[c_formal->type], c_formal->id, vl);
+          } else {
+            coutf( "  %s* %s;", instr_formal_type_names_real[c_formal->type], c_formal->id);
+          }
+              } else if (c_formal->type != instr_type_string) {
+                coutf( "  %s %s;", instr_formal_type_names_real[c_formal->type], c_formal->id);
+              }
+              else  /* array parameter */ {
+                coutf( "  %s %s[16384];", instr_formal_type_names_real[c_formal->type+1], c_formal->id);
+              }
+            } /* while c_formal */
 
-        list_iterate_end(liter);
-      } /* if(list_len(l) > 0) */
-    } /* for List in (setpar outpar declpar) */
+            list_iterate_end(liter);
+          } /* if(list_len(l) > 0) */
+        } /* for List in (setpar outpar declpar) */
 
-    // jg-200203: NOTE that we no longer copy-paste DECLARE block to comp pars struct
+        // jg-200203: NOTE that we no longer copy-paste DECLARE block to comp pars struct
 
-    // output a comment noting a lack of parameters
-    if (!nb_parameters)
-      coutf("  char %s_has_no_parameters;", comp->def->name);
+        // output a comment noting a lack of parameters
+        if (!nb_parameters)
+          coutf( "  char %s_has_no_parameters;", comp->def->name);
 
-    // comp parameters struct end
-    coutf("}; /* _struct_%s_parameters */", comp->def->name);
-    coutf("typedef struct _struct_%s_parameters _class_%s_parameters;",
-      comp->def->name, comp->def->name);
-    cout("");
+        // comp parameters struct end
+        coutf( "}; /* _struct_%s_parameters */", comp->def->name);
+        coutf( "typedef struct _struct_%s_parameters _class_%s_parameters;",
+          comp->def->name, comp->def->name);
+        cout("");
 
-    coutf("/* Parameters for component type '%s' */", comp->def->name);
-    coutf("struct _struct_%s {", comp->def->name);
-    /* make struct: set, pos, rot, declare block */
-    coutf("  char     _name[256]; /* e.g. %s */", comp->name);
-    coutf("  char     _type[256]; /* %s */", comp->def->name);
-    coutf("  long     _index; /* e.g. %i index in TRACE list */", index);
-    cout( "  Coords   _position_absolute;");
-    cout( "  Coords   _position_relative; /* wrt PREVIOUS */");
-    cout( "  Rotation _rotation_absolute;");
-    cout( "  Rotation _rotation_relative; /* wrt PREVIOUS */");
-    cout( "  int      _rotation_is_identity;");
-    cout( "  int      _position_relative_is_zero;");
-    coutf("  _class_%s_parameters _parameters;", comp->def->name);
-    cout("};");
-    coutf("typedef struct _struct_%s _class_%s;", comp->def->name, comp->def->name);
-  } /* define class type parameter structure when not done yet (only once) */
+        coutf( "/* Parameters for component type '%s' */", comp->def->name);
+        coutf( "struct _struct_%s {", comp->def->name);
+        /* make struct: set, pos, rot, declare block */
+        coutf( "  char     _name[256]; /* e.g. %s */", comp->name);
+        coutf( "  char     _type[256]; /* %s */", comp->def->name);
+        coutf( "  long     _index; /* e.g. %i index in TRACE list */", index);
+        cout(  "  Coords   _position_absolute;");
+        cout(  "  Coords   _position_relative; /* wrt PREVIOUS */");
+        cout(  "  Rotation _rotation_absolute;");
+        cout(  "  Rotation _rotation_relative; /* wrt PREVIOUS */");
+        cout(  "  int      _rotation_is_identity;");
+        cout(  "  int      _position_relative_is_zero;");
+        coutf( "  _class_%s_parameters _parameters;", comp->def->name);
+        cout("};");
+        coutf("typedef struct _struct_%s _class_%s;", comp->def->name, comp->def->name);
+    } /* define class type parameter structure when not done yet (only once) */
 
-  /* instantiate one structure per component instance */
-  coutf("_class_%s _%s_var;", comp->def->name, comp->name);
-  coutf("#pragma acc declare create ( _%s_var )", comp->name);
-  cout("");
+    /* instantiate one structure per component instance */
+    coutf("_class_%s _%s_var;", comp->def->name, comp->name);
+    coutf("#pragma acc declare create ( _%s_var )", comp->name);
+    coutf("");
 
-  return(warnings);
+    return(warnings);
 } /* cogen_comp_declare */
 
 /* *****************************************************************************
@@ -579,15 +604,15 @@ static void cogen_comp_init_par(struct comp_inst *comp, struct instr_def *instr,
     List_handle list_par = list_iterate(l);
     struct comp_iformal *par;
 
-    while((par = list_next(list_par)) != NULL)
+    while((par = (comp_iformal*) list_next(list_par)) != NULL)
     {
       char *val=NULL;
 
       if (!strcmp(section, "SETTING")) {
         struct Symtab_entry *entry;
         entry = symtab_lookup(comp->setpar, par->id);
-        val   = exp_tostring(entry->val); /* replaced by instrument parameter when exists */
-        code_set_source(instr->quoted_source, exp_getlineno(entry->val));
+        val   = exp_tostring((cexp*) entry->val); /* replaced by instrument parameter when exists */
+        code_set_source(instr->quoted_source, exp_getlineno((cexp*) entry->val));
       } else {
         val =  par->isoptional ? exp_tostring(par->default_value) : NULL;
       }
@@ -626,7 +651,7 @@ static void cogen_comp_init_par(struct comp_inst *comp, struct instr_def *instr,
     list_iterate_end(list_par);
     if(list_len(l) > 0 && !strcmp(section, "SETTING"))
       code_reset_source();
-    cout("");
+    coutf("");
   }
 } /* cogen_comp_init_par */
 
@@ -656,7 +681,7 @@ static void cogen_comp_init_position(
   relcomp = comp->pos->orientation_rel;
   coutf("  /* component %s=%s() AT ROTATED */",
     comp->name, comp->def->name);
-  cout("  {");
+  coutf("  {");
   coutf("    Coords tc1, tc2;");
   coutf("    tc1 = coords_set(0,0,0);");
   coutf("    tc2 = coords_set(0,0,0);");
@@ -766,7 +791,7 @@ int cogen_comp_section_class(
   int cnt_extend = 0;
   if (!strcmp(section, "TRACE")) {
     liter = list_iterate(instr->complist);
-    while((extendcomp = list_next(liter)) != NULL) {
+    while((extendcomp = (comp_inst*) list_next(liter)) != NULL) {
       if (list_len(extendcomp->extend->lines) > 0 && (!strcmp(extendcomp->def->name, comp->def->name)))
         cnt_extend++;
     }
@@ -799,9 +824,9 @@ int cogen_comp_section_class(
     {
       coutf("  , _class_particle *_particle) {",
         comp->def->name, comp->def->name, section_lower, comp->def->name);
-      cout("  ABSORBED=SCATTERED=RESTORE=0;");
+      coutf("  ABSORBED=SCATTERED=RESTORE=0;");
     } else
-      cout(") {");
+      coutf(") {");
 
     // def-undef component pars
     cogen_defundef(comp, comp->def->set_par, LOCAL_INSTANCE_PAR_REF); // [par] -> comp->parameters.[par]
@@ -811,7 +836,7 @@ int cogen_comp_section_class(
       comp->name, section_lower, comp->name, comp->def->name, section,
       code && code->quoted_filename ? code->quoted_filename : comp->def->name,
       code && code->linenum > 0 ? code->linenum : 0);
-    cout("");
+    coutf("");
 
     // TRACE assign user var values, instance specific switch
     // NOTE: These are the user1, user2, ... component vars,
@@ -826,10 +851,10 @@ int cogen_comp_section_class(
       int has_user_vars = 0;
       char *val=NULL;
       piter = list_iterate(comp->def->set_par);
-      while((par = list_next(piter)) != NULL) {
+      while((par = (comp_iformal*) list_next(piter)) != NULL) {
         // get parameter value from component parameters name-value structure
         entry = symtab_lookup(comp->setpar, par->id);
-        val = exp_tostring(entry->val);
+        val = exp_tostring((cexp*) entry->val);
 
         if (par->type == instr_type_symbol
           && strcmp(val, "\0")
@@ -846,18 +871,18 @@ int cogen_comp_section_class(
       if (has_user_vars) {
         // loop components
         citer = list_iterate(instr->complist);
-        while((loopcomp = list_next(citer)) != NULL) {
+        while((loopcomp = (comp_inst*) list_next(citer)) != NULL) {
           if ((!strcmp(comp->def->name, loopcomp->def->name))) {
             coutf("  /* Check if this is component '%s' */ ", loopcomp->name);
       	    coutf("  if(_comp->_index == %i) { ", loopcomp->index);
 
             // loop pars
             piter = list_iterate(loopcomp->def->set_par);
-            while((par = list_next(piter))) {
+            while((par = (comp_iformal*) list_next(piter))) {
               if (par->type == instr_type_symbol) {
                 entry = symtab_lookup(loopcomp->setpar, par->id);
-                val = exp_tostring(entry->val);
-                cout("    // HEST!");
+                val = exp_tostring((cexp*) entry->val);
+                coutf("    // HEST!");
                 coutf("    %s = %s;", par->id, val);
               }
             }
@@ -873,82 +898,82 @@ int cogen_comp_section_class(
 
     }
     if (!strcmp(section, "DISPLAY"))
-      cout("  printf(\"MCDISPLAY: component %s\\n\", _comp->_name);");
+      coutf("  printf(\"MCDISPLAY: component %s\\n\", _comp->_name);");
 
     // shared comp [section] code here
     //if (!strcmp(section, "TRACE")) cout("{"); // scope it to avoid EXTEND clashes
     codeblock_out(code); // component definition code common to all instances, needs defines
     if (!strcmp(section, "TRACE")) {
-      cout("#ifndef NOABSORB_INF_NAN");
-      cout("  /* Check for nan or inf particle parms */ ");
+      coutf("#ifndef NOABSORB_INF_NAN");
+      coutf("  /* Check for nan or inf particle parms */ ");
 #if MCCODE_PROJECT == 1     /* neutron */
-      cout("  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;");
-      cout("  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;");
+      coutf("  if(isnan(p + t + vx + vy + vz + x + y + z)) ABSORB;");
+      coutf("  if(isinf(fabs(p) + fabs(t) + fabs(vx) + fabs(vy) + fabs(vz) + fabs(x) + fabs(y) + fabs(z))) ABSORB;");
 #elif MCCODE_PROJECT == 2   /* xray */
       cout("  if(isnan(p + t + kx + ky + kz + x + y + z + phi)) ABSORB;");
       cout("  if(isinf(fabs(p) + fabs(t) + fabs(kx) + fabs(ky) + fabs(kz) + fabs(x) + fabs(y) + fabs(z) + fabs(phi))) ABSORB;");
 #endif
-      cout("#else");
-      cout("  if(isnan(p)  ||  isinf(p)) printf(\"NAN or INF found in p,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("  if(isnan(t)  ||  isinf(t)) printf(\"NAN or INF found in t,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("#else");
+      coutf("  if(isnan(p)  ||  isinf(p)) printf(\"NAN or INF found in p,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(t)  ||  isinf(t)) printf(\"NAN or INF found in t,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
 #if MCCODE_PROJECT == 1     /* neutron */
-      cout("  if(isnan(vx) || isinf(vx)) printf(\"NAN or INF found in vx, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("  if(isnan(vy) || isinf(vy)) printf(\"NAN or INF found in vy, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("  if(isnan(vz) || isinf(vz)) printf(\"NAN or INF found in vz, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(vx) || isinf(vx)) printf(\"NAN or INF found in vx, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(vy) || isinf(vy)) printf(\"NAN or INF found in vy, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(vz) || isinf(vz)) printf(\"NAN or INF found in vz, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
 #elif MCCODE_PROJECT == 2   /* xray */
       cout("  if(isnan(phi)  ||  isinf(phi)) printf(\"NAN or INF found in phi, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
       cout("  if(isnan(kx) || isinf(kx)) printf(\"NAN or INF found in kx, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
       cout("  if(isnan(ky) || isinf(ky)) printf(\"NAN or INF found in ky, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
       cout("  if(isnan(kz) || isinf(kz)) printf(\"NAN or INF found in kz, %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
 #endif
-      cout("  if(isnan(x)  ||  isinf(x)) printf(\"NAN or INF found in x,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("  if(isnan(y)  ||  isinf(y)) printf(\"NAN or INF found in y,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("  if(isnan(z)  ||  isinf(z)) printf(\"NAN or INF found in z,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
-      cout("#endif");
+      coutf("  if(isnan(x)  ||  isinf(x)) printf(\"NAN or INF found in x,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(y)  ||  isinf(y)) printf(\"NAN or INF found in y,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("  if(isnan(z)  ||  isinf(z)) printf(\"NAN or INF found in z,  %s (particle %lld)\\n\",_comp->_name,_particle->_uid);");
+      coutf("#endif");
       //cout("}");
     }
 
     // EXTEND blocks written here, as component name switch, if any
     if (!strcmp("TRACE", section) && cnt_extend > 0) {
       // define symbols for USERVARS particle struct members:
-      cout("");
+      coutf("");
       List_handle uservarsiter = list_iterate(instr->user_vars);
       char *var;
-      while((var = list_next(uservarsiter))) {
+      while((var = (char*) list_next(uservarsiter))) {
         coutf("  #define %s (_particle->%s)", var, var);
       }
       list_iterate_end(uservarsiter);
 
       liter = list_iterate(instr->complist);
-      while((extendcomp = list_next(liter)) != NULL) {
+      while((extendcomp = (comp_inst*) list_next(liter)) != NULL) {
         if (list_len(extendcomp->extend->lines) > 0
           && (!strcmp(extendcomp->def->name, comp->def->name))
           ) {
             coutf("if (_comp->_index == %i) { // EXTEND '%s'", extendcomp->index, extendcomp->name);
             codeblock_out(extendcomp->extend);
-            cout("}");
+            coutf("}");
         }
       }
       list_iterate_end(liter);
 
       // define symbols for partilce USERVARS for extend section only:
       uservarsiter = list_iterate(instr->user_vars);
-      while((var = list_next(uservarsiter))) {
+      while((var = (char*) list_next(uservarsiter))) {
         coutf("  #undef %s", var);
       }
       list_iterate_end(uservarsiter);
-      cout("");
+      coutf("");
     }
     /* undefine aliases */
     cogen_defundef(comp, comp->def->set_par, PAR_UNDEF);
     cogen_defundef(comp, comp->def->out_par, PAR_UNDEF);
     if (!strcmp(section, "TRACE")) {    
-      cout("  return;");
+      coutf("  return;");
     } else {
-      cout("  return(_comp);");
+      coutf("  return(_comp);");
     }
     coutf("} /* class_%s_%s */", comp->def->name, section_lower);
-    cout("");
+    coutf("");
 
   } /* generated SHARED [section] for component given type */
 
@@ -972,7 +997,7 @@ int cogen_comp_setpos(
 
   /* the set+pos/rot instance function **************************************** */
   coutf("int _%s_setpos(void)", comp->name);
-  cout("{ /* sets initial component parameters, position and rotation */");
+  coutf("{ /* sets initial component parameters, position and rotation */");
 
   /* init parameters. These can then be used in position/rotation syntax */
   /* all these parameters have a #define pointing to the real name space in structure */
@@ -988,8 +1013,8 @@ int cogen_comp_setpos(
   coutf("  int current_setpos_index = %d;", comp->index);
 
   /* setting & output parameters of the component */
-  cogen_comp_init_par(comp, instr, "SETTING");  // specific to each instance
-  cogen_comp_init_par(comp, instr, "PRIVATE");  // specific to each instance
+  cogen_comp_init_par(comp, instr, (char*) "SETTING");  // specific to each instance
+  cogen_comp_init_par(comp, instr, (char*) "PRIVATE");  // specific to each instance
 
   /* undef aliases */
   //cogen_defundef(comp, comp->def->set_par, PAR_UNDEF);
@@ -1000,13 +1025,13 @@ int cogen_comp_setpos(
 
   char pref[5];
   if (comp->index-1 < 10) {
-    sprintf(pref,"000");
+    sprintf(pref, "000");
   } else if (comp->index-1 < 100) {
-    sprintf(pref,"00");
+    sprintf(pref, "00");
   } else if (comp->index-1 < 1000) {
-    sprintf(pref,"0");
+    sprintf(pref, "0");
   } else if (comp->index-1 < 10000) {
-    sprintf(pref,"");
+    //sprintf(pref, (char*) "");
   } else {
     fprintf(stderr,"Error, no support for > 10000 comps at the moment!\n");
     exit(-1);
@@ -1026,20 +1051,20 @@ int cogen_comp_setpos(
   struct Symtab_entry *entry;
   char *val, *defval;
   piter = list_iterate(comp->def->set_par);
-  while((par = list_next(piter)) != NULL) {
+  while((par = (comp_iformal*) list_next(piter)) != NULL) {
     // get parameter value from component parameters name-value structure
     entry = symtab_lookup(comp->setpar, par->id);
-    val = exp_tostring(entry->val);
+    val = exp_tostring((cexp*) entry->val);
     if (!par->isoptional) {
       if (par->type==instr_type_string) {
-	defval="\"NONE\"";
+	      defval = (char*) "\"NONE\"";
       } else {
-	defval="NONE";
+      	defval = (char*) "NONE";
       }
     } else {
-      defval=exp_tostring(par->default_value);
+      defval = exp_tostring(par->default_value);
     }
-    if (par->type==instr_type_string) { // value and defval "come with quotes" or are symbolic
+    if (par->type == instr_type_string) { // value and defval "come with quotes" or are symbolic
       coutf("        mccomp_param_nexus(nxhandle,\"%s%d_%s\", \"%s\", %s, %s, \"%s\");", pref, comp->index-1, comp->name, par->id, defval, val, instr_formal_type_names_real[par->type]);
     } else {                            // both need quoting
       coutf("        mccomp_param_nexus(nxhandle,\"%s%d_%s\", \"%s\", \"%s\", \"%s\",\"%s\");", pref, comp->index-1, comp->name, par->id, defval,val, instr_formal_type_names_real[par->type]);
@@ -1047,16 +1072,16 @@ int cogen_comp_setpos(
   }
   list_iterate_end(piter);
 
-  coutf("      );");
-  coutf("    }");
-  coutf("  } else {");
-  coutf("    // fprintf(stderr,\"NO NEXUS FILE\");");
-  coutf("  }");
-  coutf("  #endif");
-  cout("  return(0);");
+  coutf( "      );");
+  coutf( "    }");
+  coutf( "  } else {");
+  coutf( "    // fprintf(stderr,\"NO NEXUS FILE\");");
+  coutf( "  }");
+  coutf( "  #endif");
+  coutf("  return(0);");
 
-  coutf("} /* _%s_%s */", comp->name, "setpos");
-  cout("");
+  coutf( "} /* _%s_%s */", comp->name, "setpos");
+  coutf("");
 
   return(warnings);
 } /* cogen_comp_setpos */
@@ -1079,8 +1104,8 @@ void cogen_getvarpars_fct(struct instr_def *instr)
   iter = list_iterate(instr->complist);
   struct comp_inst *comp;
 
-  while((comp = list_next(iter)) != NULL) {
-    coutf("  if (!strcmp(compname, \"%s\")) return (void *) &(_%s_var._parameters);", comp->name, comp->name);
+  while((comp = (comp_inst*) list_next(iter)) != NULL) {
+    coutf((char *) "  if (!strcmp(compname, \"%s\")) return (void *) &(_%s_var._parameters);", comp->name, comp->name);
   }
   list_iterate_end(iter);
 
@@ -1102,7 +1127,7 @@ void cogen_getcompindex_fct(struct instr_def *instr){
   iter = list_iterate(instr->complist);
   struct comp_inst *comp;
   int index=1;
-  while ((comp = list_next(iter)) != NULL) {
+  while ((comp = (comp_inst*) list_next(iter)) != NULL) {
     coutf("  if (!strcmp(compname, \"%s\")) return %i;", comp->name, index++);
   }
   cout("  return -1;");
@@ -1158,7 +1183,7 @@ void cogen_getparticlevar_fct(struct instr_def *instr)
   iter = list_iterate(instr->user_vars);
   char *varname;
 
-  while((varname = list_next(iter))) {
+  while((varname = (char*) list_next(iter))) {
     coutf("  if (!strcmp(token, \"%s\")) return (void *) &(p->%s);", varname, varname);
   }
   list_iterate_end(iter);
@@ -1212,7 +1237,7 @@ int cogen_decls(struct instr_def *instr)
   } else {
 
     liter = list_iterate(instr->formals);
-    while((i_formal = list_next(liter)))
+    while((i_formal = (instr_formal*) list_next(liter)))
     {
       if (i_formal->id && strlen(i_formal->id)) {
         coutf("  %s %s;", instr_formal_type_names_real[i_formal->type], i_formal->id);
@@ -1228,7 +1253,7 @@ int cogen_decls(struct instr_def *instr)
   /* check if we have GROUP, SPLIT and JUMP */
   index = list_len(instr->grouplist); // count GROUP
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     if (comp->split) index++;         // count SPLIT
   }
   list_iterate_end(liter);
@@ -1241,12 +1266,12 @@ int cogen_decls(struct instr_def *instr)
     if (list_len(instr->grouplist)) {
       struct group_inst *group;
       liter = list_iterate(instr->grouplist);
-      while((group = list_next(liter)))
+      while((group = (group_inst*) list_next(liter)))
         coutf("  long Group_%s; /* equals index of scattering comp when in group */", group->name);
       list_iterate_end(liter);
     }
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
       if (comp->split) {
         coutf("  long Split_%s; /* this is the SPLIT counter decremented down to 0 */", comp->name);
         coutf("  _class_particle Split_%s_particle; /* this is the particle to duplicate */", comp->name);
@@ -1283,7 +1308,7 @@ int cogen_decls(struct instr_def *instr)
   coutf("int numipar = %d;", numipar);
   coutf("struct mcinputtable_struct mcinputtable[] = {");
   liter = list_iterate(instr->formals);
-  while((i_formal = list_next(liter)))
+  while((i_formal = (instr_formal*) list_next(liter)))
   {
     if (strlen(i_formal->id)) {
       if (i_formal->isoptional  // needed to avoid double quotes in strings
@@ -1309,7 +1334,7 @@ int cogen_decls(struct instr_def *instr)
   int num_metadata = 0;
   liter = list_iterate(instr->metadata);
   struct metadata_struct * metadata;
-  while ((metadata = list_next(liter))){
+  while ((metadata = (metadata_struct*) list_next(liter))){
     coutf("\"%s\", \"%s\", \"%s\",", metadata->source, metadata->name, metadata->type);
     escaped_lines_out(metadata->lines);
     coutf(","); // terminates the line-broken concatenated strings
@@ -1323,7 +1348,7 @@ int cogen_decls(struct instr_def *instr)
   /* 4. Component SHAREs. */
   liter = list_iterate(instr->complist);
   index=0;
-  while((comp = list_next(liter)))
+  while((comp = (comp_inst*) list_next(liter)))
   {
     if((list_len(comp->def->share_code->lines) > 0) && (!comp->def->flag_defined_share))
     {
@@ -1357,7 +1382,7 @@ int cogen_decls(struct instr_def *instr)
   cout("");
   liter = list_iterate(instr->complist);
   index=0;
-  while((comp = list_next(liter))) {
+  while((comp = (comp_inst*) list_next(liter))) {
     comp->index=++index;        /* comp index starts at 1, as in instrument.y */
     // NOTE: "counter_instances" no longer matters, due to class functions
     comp->def->counter_instances++;
@@ -1431,7 +1456,7 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
     cogen_getdistance_fct();
 
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
       warnings += cogen_comp_setpos(comp, last, instr);
       if (comp->skip_transform == 0) {
         // Ensure useless components skipped
@@ -1442,20 +1467,16 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
 
   /* generate class functions */
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL)
+  while((comp = (comp_inst*) list_next(liter)) != NULL)
   {
     if (!strcmp(section, "INITIALISE"))
-      warnings += cogen_comp_section_class(comp, instr, "INITIALISE",
-        "init", comp->def->init_code, &(comp->def->flag_defined_init));
+      warnings += cogen_comp_section_class(comp, instr, (char*) "INITIALISE", (char*) "init", comp->def->init_code, &(comp->def->flag_defined_init));
     else if (!strcmp(section, "SAVE"))
-      warnings += cogen_comp_section_class(comp, instr, "SAVE",
-        "save", comp->def->save_code, &(comp->def->flag_defined_save));
+      warnings += cogen_comp_section_class(comp, instr, (char*) "SAVE", (char*) "save", comp->def->save_code, &(comp->def->flag_defined_save));
     else if (!strcmp(section, "FINALLY"))
-      warnings += cogen_comp_section_class(comp, instr, "FINALLY",
-        "finally", comp->def->finally_code, &(comp->def->flag_defined_finally));
+      warnings += cogen_comp_section_class(comp, instr, (char*) "FINALLY", (char*) "finally", comp->def->finally_code, &(comp->def->flag_defined_finally));
     else if (!strcmp(section, "DISPLAY"))
-      warnings += cogen_comp_section_class(comp, instr, "DISPLAY",
-        "display", comp->def->display_code, &(comp->def->flag_defined_display));
+      warnings += cogen_comp_section_class(comp, instr, (char*) "DISPLAY", (char*) "display", comp->def->display_code, &(comp->def->flag_defined_display));
   }
   list_iterate_end(liter);
   cout("");
@@ -1495,7 +1516,7 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
     // OpenACC update components on host (e.g. copy back GPU-generated changes)
     // (first thing to do in "finally")
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
       coutf("#pragma acc update host(_%s_var)", comp->name);
     }
     // attach instrument
@@ -1524,7 +1545,7 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
   /* generate setpos() calls, one pr. component instance */
   if (!strcmp(section, "INITIALISE")) {
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL)
+    while((comp = (comp_inst*) list_next(liter)) != NULL)
     {
       coutf("  _%s_%s(); /* type %s */", comp->name, "setpos", comp->def->name);
     }
@@ -1535,7 +1556,7 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
   /* component calls: one call for each component instance */
   coutf("  /* call iteratively all components %s */", section);
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL)
+  while((comp = (comp_inst*) list_next(liter)) != NULL)
   {
     /* get the component code: no call to it when no code exists (except INIT) */
     struct code_block *comp_code=NULL;
@@ -1569,7 +1590,7 @@ int cogen_section(struct instr_def *instr, char *section, char *section_lower,
     cout("#include <openacc.h>");
     // update component instances on device (e.g. push "managed" data structures)
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
       coutf("#pragma acc update device(_%s_var)", comp->name);
     }
     // update instrument
@@ -1603,8 +1624,8 @@ void def_trace_section(struct instr_def *instr)
   { /* particle state parameter names are used for defines */
   #if MCCODE_PROJECT == 1     /* neutron */
   #define NUM_STATE_PARS 17
-          "x", "y", "z", "vx", "vy", "vz",
-          "t", "sx", "sy", "sz", "p", "mcgravitation", "mcMagnet", "allow_backprop", "_mctmp_a", "_mctmp_b", "_mctmp_c"
+          (char*) "x", (char*) "y", (char*) "z", (char*) "vx", (char*) "vy", (char*) "vz",
+          (char*) "t", (char*) "sx", (char*) "sy", (char*) "sz", (char*) "p", (char*) "mcgravitation", (char*) "mcMagnet", (char*) "allow_backprop", (char*) "_mctmp_a", (char*) "_mctmp_b", (char*) "_mctmp_c"
   #elif MCCODE_PROJECT == 2   /* xray */
   #define NUM_STATE_PARS 15
           "x", "y", "z", "kx", "ky", "kz",
@@ -1660,8 +1681,8 @@ void undef_trace_section(struct instr_def *instr)
     { /* particle state parameter names are used for defines */
     #if MCCODE_PROJECT == 1     /* neutron */
     #define NUM_STATE_PARS 17
-            "x", "y", "z", "vx", "vy", "vz",
-            "t", "sx", "sy", "sz", "p", "mcgravitation", "mcMagnet", "allow_backprop", "_mctmp_a", "_mctmp_b", "_mctmp_c"
+          (char*) "x", (char*) "y", (char*) "z", (char*) "vx", (char*) "vy", (char*) "vz",
+          (char*) "t", (char*) "sx", (char*) "sy", (char*) "sz", (char*) "p", (char*) "mcgravitation", (char*) "mcMagnet", (char*) "allow_backprop", (char*) "_mctmp_a", (char*) "_mctmp_b", (char*) "_mctmp_c"
     #elif MCCODE_PROJECT == 2   /* xray */
     #define NUM_STATE_PARS 15
             "x", "y", "z", "kx", "ky", "kz",
@@ -1703,7 +1724,7 @@ void def_uservars(struct instr_def *instr)
 {
   List_handle uservarsiter = list_iterate(instr->user_vars);
   char *var;
-  while((var = list_next(uservarsiter))) {
+  while((var = (char*) list_next(uservarsiter))) {
     coutf("#define %s (_particle->%s)", var, var);
   }
   list_iterate_end(uservarsiter);
@@ -1716,7 +1737,7 @@ void undef_uservars(struct instr_def *instr)
 {
   List_handle uservarsiter = list_iterate(instr->user_vars);
   char *var;
-  while((var = list_next(uservarsiter))) {
+  while((var = (char*) list_next(uservarsiter))) {
     coutf("#undef %s", var);
   }
   list_iterate_end(uservarsiter);
@@ -1737,8 +1758,8 @@ int cogen_trace_functions(struct instr_def *instr)
 
   /* generate trace class fcs */
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
-    warnings += cogen_comp_section_class(comp, instr, "TRACE", "trace",
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
+    warnings += cogen_comp_section_class(comp, instr, (char*) "TRACE", (char*) "trace",
       comp->def->trace_code, &(comp->def->flag_defined_trace));
   }
   list_iterate_end(liter);
@@ -1769,8 +1790,8 @@ int cogen_raytrace(struct instr_def *instr)
     { /* particle state parameter names are used for defines */
     #if MCCODE_PROJECT == 1     /* neutron */
     #define NUM_STATE_PARS 17
-            "x", "y", "z", "vx", "vy", "vz",
-            "t", "sx", "sy", "sz", "p", "mcgravitation", "mcMagnet", "allow_backprop", "_mctmp_a", "_mctmp_b", "_mctmp_c"
+          (char*) "x", (char*) "y", (char*) "z", (char*) "vx", (char*) "vy", (char*) "vz",
+          (char*) "t", (char*) "sx", (char*) "sy", (char*) "sz", (char*) "p", (char*) "mcgravitation", (char*) "mcMagnet", (char*) "allow_backprop", (char*) "_mctmp_a", (char*) "_mctmp_b", (char*) "_mctmp_c"
     #elif MCCODE_PROJECT == 2   /* xray */
     #define NUM_STATE_PARS 15
             "x", "y", "z", "kx", "ky", "kz",
@@ -1807,12 +1828,12 @@ int cogen_raytrace(struct instr_def *instr)
   printf("\nGenerating single GPU kernel or single CPU section layout: \n");
   /* intialize JUMP counters */
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     if (list_len(comp->jump) > 0) { // JUMP ITERATE counters
       struct jump_struct *this_jump;
       List_handle liter2;
       liter2 = list_iterate(comp->jump);
-      while((this_jump = list_next(liter2))) {
+      while((this_jump = (jump_struct*) list_next(liter2))) {
         /* create counter for JUMP iteration */
         if (this_jump->iterate)
           coutf("  _particle->_logic.Jump_%s_%s=0;", comp->name, this_jump->target);
@@ -1820,7 +1841,7 @@ int cogen_raytrace(struct instr_def *instr)
         if (!this_jump->target_index) {
           List_handle liter3 = list_iterate(instr->complist);
           struct comp_inst *target=NULL;
-          while((target = list_next(liter3)) != NULL) {
+          while((target = (comp_inst*) list_next(liter3)) != NULL) {
             if (!strcmp(target->name, this_jump->target))
               this_jump->target_index = target->index;
           }
@@ -1842,7 +1863,7 @@ int cogen_raytrace(struct instr_def *instr)
 
   /* now we produce the list of statements for each component index, with the attached logic */
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     List_handle liter2;
 
     /* the SPLIT loop must be set before we enter further component blocks */
@@ -1921,7 +1942,7 @@ int cogen_raytrace(struct instr_def *instr)
     if(list_len(comp->jump) > 0) {
       struct jump_struct *this_jump;
       List_handle literJ = list_iterate(comp->jump);
-      while((this_jump = list_next(literJ))) {
+      while((this_jump = (jump_struct*) list_next(literJ))) {
         char *exp = exp_tostring(this_jump->condition);
         /* as there will be a neutron->index++, we subtract 1 to the target */
         if (this_jump->iterate) {
@@ -1971,7 +1992,7 @@ int cogen_raytrace(struct instr_def *instr)
 
   /* now we close the SPLIT loops, unrolled from last to 1st */
   liter = list_iterate_back(instr->complist);
-  while((comp = list_previous(liter)) != NULL) {
+  while((comp = (comp_inst*) list_previous(liter)) != NULL) {
     if (comp && comp->split) {
       coutf("#ifndef NOSPLIT");
       coutf( "    } /* end SPLIT at %s */", comp->name);
@@ -2093,8 +2114,8 @@ int cogen_rt_funnel(struct instr_def *instr)
     { /* particle state parameter names are used for defines */
     #if MCCODE_PROJECT == 1     /* neutron */
     #define NUM_STATE_PARS 17
-            "x", "y", "z", "vx", "vy", "vz",
-            "t", "sx", "sy", "sz", "p", "mcgravitation", "mcMagnet", "allow_backprop", "_mctmp_a", "_mctmp_b", "_mctmp_c"
+          (char*) "x", (char*) "y", (char*) "z", (char*) "vx", (char*) "vy", (char*) "vz",
+          (char*) "t", (char*) "sx", (char*) "sy", (char*) "sz", (char*) "p", (char*) "mcgravitation", (char*) "mcMagnet", (char*) "allow_backprop", (char*) "_mctmp_a", (char*) "_mctmp_b", (char*) "_mctmp_c"
     #elif MCCODE_PROJECT == 2   /* xray */
     #define NUM_STATE_PARS 15
             "x", "y", "z", "kx", "ky", "kz",
@@ -2128,7 +2149,7 @@ int cogen_rt_funnel(struct instr_def *instr)
   cout("   #endif");
   /* Check if instrument uses JUMPS */
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     if (list_len(comp->jump) > 0) { // JUMP ITERATE counters
         printf("\nWARNING:\n --> JUMP found at COMPONENT %i, %s \n", comp->index, comp->name);
 	printf(" --> JUMPS are not supported in FUNNEL mode and are ignored\n");
@@ -2192,7 +2213,7 @@ int cogen_rt_funnel(struct instr_def *instr)
   int do_split=0;
   liter = list_iterate(instr->complist);
   // iterate component list
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     List_handle liter2;
     if (comp->def->flag_noacc) {
       printf("Component %s is NOACC, CPUONLY=%i\n",comp->name,comp->cpuonly);
@@ -2305,6 +2326,8 @@ int cogen_rt_funnel(struct instr_def *instr)
   coutf("#endif // FUNNEL");
   coutf("");
   printf("\n-----------------------------------------------------------\n");
+
+  return 0;
 } /* cogen_rt_funnel */
 
 /*******************************************************************************
@@ -2422,12 +2445,12 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("struct particle_logic_struct {");
   cout("int dummy;");
   liter = list_iterate(instr->complist);
-  while((comp = list_next(liter)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter)) != NULL) {
     if (list_len(comp->jump) > 0) { // JUMP ITERATE counters
       struct jump_struct *this_jump;
       List_handle liter2;
       liter2 = list_iterate(comp->jump);
-      while((this_jump = list_next(liter2))) {
+      while((this_jump = (jump_struct*) list_next(liter2))) {
 	/* create counter for JUMP iteration */
 	if (this_jump->iterate)
 	  coutf("  long Jump_%s_%s; /* the JUMP connection <from>_<to> */", comp->name, this_jump->target);
@@ -2477,31 +2500,31 @@ cogen_header(struct instr_def *instr, char *output_name)
 
   instr->user_vars = list_create();
   instr->user_vars_types = list_create();
-  int uvlist = get_codeblock_vars(instr->vars, instr->user_vars, instr->user_vars_types, "USERVARS", "EXTEND");
+  int uvlist = get_codeblock_vars(instr->vars, instr->user_vars, instr->user_vars_types, (char*) "USERVARS", (char*) "EXTEND");
   // Look in comp definitions
   List_handle liter3;
   liter3 = list_iterate(instr->complist);
-  while((comp = list_next(liter3)) != NULL) {
+  while((comp = (comp_inst*) list_next(liter3)) != NULL) {
     List cvars;
     List ctypes;
     cvars = list_create();
     ctypes = list_create();
-    if (get_codeblock_vars(comp->def->uservar_code, cvars, ctypes, "USERVARS", "EXTEND")) {
+    if (get_codeblock_vars(comp->def->uservar_code, cvars, ctypes, (char*) "USERVARS", (char*) "EXTEND")) {
       List_handle cliter;
       List_handle cliter2;
       cliter = list_iterate(cvars);
       cliter2 = list_iterate(ctypes);
       char *cvar;
       char *ctpe;
-      while(cvar = list_next(cliter)) {
-        ctpe = list_next(cliter2);
-        char *Numberedvar = malloc(256*sizeof(char));
+      while(cvar = (char*) list_next(cliter)) {
+        ctpe = (char*) list_next(cliter2);
+        char *Numberedvar = (char*) malloc(256*sizeof(char));
 	/* We need to attach comp index to cvar */
 	sprintf(Numberedvar,"%s_%d",cvar,comp->index);
 	list_add(instr->user_vars, Numberedvar);
 	list_add(instr->user_vars_types, ctpe);
 	printf("\n--> Added COMPONENT %s USERVAR %s with type %s\n",comp->name,Numberedvar,ctpe);
-      }
+    }
       list_iterate_end(cliter);
       list_iterate_end(cliter2);
     }
@@ -2515,8 +2538,8 @@ cogen_header(struct instr_def *instr, char *output_name)
     liter2 = list_iterate(instr->user_vars_types);
     char *var;
     char *tpe;
-    while((var = list_next(liter))) {
-      tpe = list_next(liter2);
+    while((var = (char*) list_next(liter))) {
+      tpe = (char*) list_next(liter2);
       coutf("  %s %s;", tpe, var);
     }
     list_iterate_end(liter);
@@ -2608,7 +2631,7 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("  if(!str_comp(\"_mctmp_a\",name)){rval=p->_mctmp_a;s=0;}");
   cout("  if(!str_comp(\"_mctmp_b\",name)){rval=p->_mctmp_b;s=0;}");
   cout("  if(!str_comp(\"_mctmp_c\",name)){rval=p->_mctmp_c;s=0;}");
-  while((var = list_next(liter))) {
+  while((var = (char*) list_next(liter))) {
     coutf("  if(!str_comp(\"%s\",name)){rval=*( (double *)(&(p->%s)) );s=0;}",var,var);
   }
   list_iterate_end(liter);
@@ -2654,7 +2677,7 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("  if(!str_comp(\"t\",name)) {rval=(void*)&(p->t); s=0;}");
   cout("  if(!str_comp(\"p\",name)) {rval=(void*)&(p->p); s=0;}");
 //  char *var, *tpe;
-  while((var = list_next(liter))) {
+  while((var = (char*) list_next(liter))) {
     coutf("  if(!str_comp(\"%s\",name)){rval=(void*)&(p->%s);s=0;}",var,var);
   }
   list_iterate_end(liter);
@@ -2695,8 +2718,8 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("  if(!str_comp(\"p\",name)) {memcpy(&(p->p),  value, sizeof(double)); rval=0;}");
   cout("  if(!str_comp(\"t\",name)) {memcpy(&(p->t),  value, sizeof(double)); rval=0;}");
   char *invar;
-  while((invar = list_next(liter))) {
-    tpe = list_next(liter2);
+  while((invar = (char*) list_next(liter))) {
+    tpe = (char*) list_next(liter2);
     if (!(strstr(tpe, "[") || strstr(tpe, "]") || strstr(tpe, "*"))){
       // not an array -- we should be able to use memcopy freely
       coutf("  if(!str_comp(\"%s\",name)){memcpy(&(p->%s), value, sizeof(%s)); rval=0;}", invar, invar, tpe);
@@ -2719,8 +2742,8 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("#endif");
   cout("  int rval=1;");
  // char *invar;
-  while((invar = list_next(liter))) {
-    tpe = list_next(liter2);
+  while((invar = (char*) list_next(liter))) {
+    tpe = (char*) list_next(liter2);
     if ((strstr(tpe, "[") || strstr(tpe, "]") || strstr(tpe, "*"))){
       // an array -- we need to know how many elements we're copying
       coutf("  if(!str_comp(\"%s\",name)){memcpy(&(p->%s), value, elements * sizeof(%s)); rval=0;}", invar, invar, tpe);
@@ -2759,7 +2782,7 @@ cogen_header(struct instr_def *instr, char *output_name)
   cout("  double rval=0;");
   cout("  switch(id){");
   int jvar=0;
-  while((var = list_next(liter))) {
+  while((var = (char*) list_next(liter))) {
     coutf("  case %d: { rval=*( (double *)(&(p->%s)) );s=0;break;}",jvar++,var);
   }
   cout("  }");
@@ -2772,8 +2795,8 @@ cogen_header(struct instr_def *instr, char *output_name)
   liter2 = list_iterate(instr->user_vars_types);
   cout("#pragma acc routine");
   cout("void particle_uservar_init(_class_particle *p){");
-  while((var = list_next(liter))) {
-    tpe = list_next(liter2);
+  while((var = (char*) list_next(liter))) {
+    tpe = (char*) list_next(liter2);
     if (strstr(tpe, "double") || strstr(tpe, "MCNUM") || strstr(tpe, "int")){
       if (!strstr(tpe, "[") && !strstr(tpe, "]") && !strstr(tpe, "*")) {
 	coutf("  p->%s=0;",var);
@@ -2795,17 +2818,17 @@ cogen_header(struct instr_def *instr, char *output_name)
   if(instr->include_runtime)
   {
     cout("#define MC_EMBEDDED_RUNTIME"); /* Some stuff will be static. */
-    embed_file("mccode-r.h");
+    embed_file((char*) "mccode-r.h");
 #if MCCODE_PROJECT == 1     /* neutron */
-    embed_file("mcstas-r.h");
+    embed_file((char*) "mcstas-r.h");
 #elif MCCODE_PROJECT == 2   /* xray */
     embed_file("mcxtrace-r.h");
 #endif
     /* NeXus support, only active with -DUSE_NEXUS */
     if (verbose) fprintf(stderr, "Compile            '%s -DUSE_NEXUS -lNeXus' to enable NeXus support\n", output_name);
-    embed_file("mccode-r.c");
+    embed_file((char*) "mccode-r.c");
 #if MCCODE_PROJECT == 1     /* neutron */
-    embed_file("mcstas-r.c");
+    embed_file((char*) "mcstas-r.c");
 #elif MCCODE_PROJECT == 2   /* xray */
     embed_file("mcxtrace-r.c");
 #endif
@@ -2856,7 +2879,7 @@ cogen_header(struct instr_def *instr, char *output_name)
       fseek(fid, 0, SEEK_END);
       index = ftell(fid);
       fseek(fid, 0, SEEK_SET);
-      content = malloc(index + 1);
+      content = (char*) malloc(index + 1);
       /* read full file content */
       fread(content, index, 1, fid);
       fclose(fid);
@@ -2900,7 +2923,7 @@ char varname_is_in_codeblock(struct code_block* code, char* varname) {
     char *comment_toend= NULL; /* this is the C++ style comment start (to end of line) */
 
     // iterate declare code
-    while((line = list_next(liter)))
+    while((line = (char*) list_next(liter)))
     {
       char *subline = line;
       char *p       = NULL;
@@ -2975,11 +2998,11 @@ int get_codeblock_vars_allcustom(struct code_block *code, List custom_vars,
   liter2 = list_iterate(types);
   char *var;
   char *tpe;
-  while((var = list_next(liter))) {
-    tpe = list_next(liter2);
+  while((var = (char*) list_next(liter))) {
+    tpe = (char*) list_next(liter2);
 
     struct comp_iformal* cvar;
-    cvar = malloc(sizeof(struct comp_iformal));
+    cvar = (comp_iformal*) malloc(sizeof(struct comp_iformal));
     cvar->type = instr_type_custom;
     cvar->type_custom = tpe;
     cvar->id = var;
@@ -3019,7 +3042,7 @@ int get_codeblock_vars(struct code_block *code, List vars, List types,
   int len = -1;
   int ans = 0;
 
-  while((l = list_next(myiter))) {
+  while((l = (char*) list_next(myiter))) {
     do {
       // line must match this format
       pos = re_match("\\w[\\s\\w\\*]+\\s+\\**\\w+\\[?\\w*\\]?\\[?\\w*\\]?;", l); // match general var decl pattern
@@ -3069,7 +3092,7 @@ int get_codeblock_vars(struct code_block *code, List vars, List types,
     List_handle liter;
     char *line;
     liter = list_iterate(code->lines);
-    while((line = list_next(liter)))
+    while((line = (char*) list_next(liter)))
       if (strchr(line, '=')) warnings++;
     list_iterate_end(liter);
   }
@@ -3095,14 +3118,14 @@ void detect_skipable_transforms(struct instr_def *instr) {
     
     // Assume all can be skipped
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
         comp->skip_transform = 1;
     }
     list_iterate_end(liter);
     
     // Detect those components that can not
     liter = list_iterate(instr->complist);
-    while((comp = list_next(liter)) != NULL) {
+    while((comp = (comp_inst*) list_next(liter)) != NULL) {
 
         if ((comp->def->trace_code && list_len(comp->def->trace_code->lines) > 0) || list_len(comp->extend->lines) > 0) {
             // If component has trace or extend, do not skip it
@@ -3116,12 +3139,12 @@ void detect_skipable_transforms(struct instr_def *instr) {
             // Its target can not be skipped either
             struct jump_struct *this_jump;
             List_handle literJ = list_iterate(comp->jump);
-            while (this_jump = list_next(literJ)) {
+            while (this_jump = (jump_struct*) list_next(literJ)) {
                 
                 // Find target (not initialized yet)
                 List_handle liter3 = list_iterate(instr->complist);
                 struct comp_inst *target=NULL;
-                while((target = list_next(liter3)) != NULL) {
+                while((target = (comp_inst*) list_next(liter3)) != NULL) {
                   if (!strcmp(target->name, this_jump->target))
                     this_jump->target_index = target->index;
                 }
@@ -3130,7 +3153,7 @@ void detect_skipable_transforms(struct instr_def *instr) {
                   this_jump->target_index += comp->index;
 
                 // component list is 1 indexed so subtract one from target_index
-                target_comp = list_access(instr->complist, this_jump->target_index - 1);
+                target_comp = (comp_inst*) list_access(instr->complist, this_jump->target_index - 1);
                 target_comp->skip_transform = 0;
             }
             list_iterate_end(literJ);
@@ -3152,7 +3175,7 @@ cogen(char *output_name, struct instr_def *instr)
   if(!output_name || !output_name[0] || !strcmp(output_name, "-"))
   {
     output_handle = fdopen(1, "w");
-    quoted_output_file_name = str_dup("<stdout>");
+    quoted_output_file_name = str_dup((char*) "<stdout>");
   }
   else
   {
@@ -3169,7 +3192,7 @@ cogen(char *output_name, struct instr_def *instr)
   warnings += cogen_decls(instr);
   detect_skipable_transforms(instr);
 
-  warnings += cogen_section(instr, "INITIALISE", "init", instr->inits);
+  warnings += cogen_section(instr, (char*) "INITIALISE", (char*) "init", instr->inits);
 
   // TRACE section requires a bit more flexibility
   def_trace_section(instr);
@@ -3180,9 +3203,9 @@ cogen(char *output_name, struct instr_def *instr)
   undef_uservars(instr);
   undef_trace_section(instr);
 
-  warnings += cogen_section(instr, "SAVE", "save", instr->saves);
-  warnings += cogen_section(instr, "FINALLY", "finally", instr->finals);
-  warnings += cogen_section(instr, "DISPLAY", "display", NULL);
+  warnings += cogen_section(instr, (char*) "SAVE", (char*) "save", instr->saves);
+  warnings += cogen_section(instr, (char*) "FINALLY", (char*) "finally", instr->finals);
+  warnings += cogen_section(instr, (char*) "DISPLAY", (char*) "display", NULL);
 
   // API macro support functions
   cogen_getvarpars_fct(instr);
@@ -3191,8 +3214,8 @@ cogen(char *output_name, struct instr_def *instr)
 
   cogen_getcompindex_fct(instr);
 
-  embed_file("metadata-r.c"); // functions used to query and display instrument/component-defined metadata strings
-  embed_file("mccode_main.c");
+  embed_file((char*) "metadata-r.c"); // functions used to query and display instrument/component-defined metadata strings
+  embed_file((char*) "mccode_main.c");
 
   if (verbose && warnings)
     fprintf(stderr,"Warning: The build of the instrument '%s' has %i warnings/errors.\n",
@@ -3201,3 +3224,5 @@ cogen(char *output_name, struct instr_def *instr)
 
   fclose(output_handle);
 } /* cogen */
+
+#endif

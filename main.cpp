@@ -1,7 +1,7 @@
 #include "lib/jg_baselayer.h"
 
 #include "src/cogen/mccode.h"
-
+#include "src/cogen/mccogen.h"
 
 void RunProgram() {
     TimeFunction;
