@@ -2,7 +2,6 @@
 #define __MC_MEMORY_H__
 
 
-
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -96,6 +95,8 @@ void nalloc(void *p, int n) {}
 // TODO: deal with these
 #define fatal_error printf
 #define debug printf
+
+
 
 
 /*******************************************************************************

@@ -1,3 +1,7 @@
+#ifndef __MC_FORMAT_H__
+#define __MC_FORMAT_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -37,7 +41,8 @@
 *******************************************************************************/
 
 #ifndef MCFORMAT
-#define MCFORMAT  "$Revision$" /* avoid memory.c to define Pool functions */
+//#define MCFORMAT  "$Revision$" /* avoid memory.c to define Pool functions */
+#define MCFORMAT  "0.1.0" /* avoid memory.c to define Pool functions */
 #endif
 
 #ifdef USE_MPI
@@ -55,14 +60,20 @@
 
 #define MCCODE_H                  /* avoids memory.c to import mccode.h */
 typedef struct Pool_header *Pool; /* allows memory to be included */
-#include "memory.c"
 
-#include "../lib/share/mccode-r.h" /* with decl of MC_PATHSEP */
+
+
+// TODO: include these runtime files
+
+
+#include "../lib/share/mccode-r.h" // with decl of MC_PATHSEP
 #include "../lib/share/mccode-r.c"
 
-/* end of parts copied from mccode.h */
-#include "../lib/share/read_table-lib.h" /* independent library */
+// end of parts copied from mccode.h
+#include "../lib/share/read_table-lib.h" // independent library
 #include "../lib/share/read_table-lib.c"
+
+
 
 #include <dirent.h>
 #include <errno.h>
@@ -1898,3 +1909,6 @@ int main(int argc, char *argv[])
   return mcnbconvert; /* number of converted files */
 
 } /* main */
+
+
+#endif

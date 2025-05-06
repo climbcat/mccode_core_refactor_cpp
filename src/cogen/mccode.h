@@ -32,15 +32,7 @@
 #include <time.h>
 
 
-// utils
-#include "mcmemory.h"
-#include "mclist.h"
-#include "mccexp.h"
-#include "mccords.h"
-#include "mcsymtab.h"
-
-
-
+// constants
 #ifndef MCCODE_H
 //#define MCCODE_H "$Revision$"
 #define MCCODE_H "0.1.0"
@@ -82,9 +74,31 @@
 #define MCCODE_YEAR "2025"
 #endif
 
+
 /* Stringification of defines - use mccode_xstr: */
 #define mccode_str(s) #s
 #define mccode_xstr(s) mccode_str(s)
+
+
+#define MC_PATHSEP_S "/"
+#define FLAVOR_UPPER "TT"
+
+
+// utils
+#include "mcmemory.h"
+#include "mclist.h"
+#include "mccexp.h"
+#include "mccords.h"
+#include "mcsymtab.h"
+#include "mcfile.h"
+
+
+// TODO: compile
+// requires mccode runtime:
+//#include "mcformat.h"
+
+
+
 
 
 

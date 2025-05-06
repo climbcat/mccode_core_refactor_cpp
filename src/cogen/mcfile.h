@@ -1,3 +1,7 @@
+#ifndef __MC_FILE_H__
+#define __MC_FILE_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -18,6 +22,7 @@
 *
 *******************************************************************************/
 
+
 #include <stdlib.h>
 #include <stdio.h>
 #ifndef _MSC_EXTENSIONS
@@ -35,7 +40,10 @@ static List search_list = NULL;
 /* MOD: P. Willendrup, Oct 11 2016: Add contrib subdir "union" */
 /* MOD: P. Willendrup, May 22 2023: Add contrib subdir "sasmodels" */
 static char *sys_subdir_table[] =
-  { "samples", "monitors", "sources", "optics", "misc" , "obsolete", "contrib", "union", "sasmodels", "share", "examples" };
+  { (char*) "samples", (char*) "monitors", (char*) "sources", (char*) "optics", (char*) "misc" , (char*) "obsolete", (char*) "contrib", (char*) "union", (char*) "sasmodels", (char*) "share", (char*) "examples" };
+
+
+
 
 /* Attempt to open FILE in directory DIR (or current directory if DIR is
    NULL). */
@@ -57,7 +65,7 @@ char *component_pathname;
 static FILE *
 try_open_component(char *dir, char *name)
 {
-  static char *suffixes[] = {".comp", ".cmp", ".com"};
+  static char *suffixes[] = { (char*) ".comp", (char*) ".cmp", (char*) ".com" };
   int i;
 
   for(i = 0; i < sizeof(suffixes)/sizeof(*suffixes); i++)
@@ -114,9 +122,9 @@ query_mcxrun_for_resourcedir( void )
 
   /* Open the command for reading. */
   if ( strcmp( MCCODE_NAME, "mcstas" ) == 0 )
-    cmd = "mcrun --showcfg=resourcedir" MCXRUN_REDIR;
+    cmd = (char*) "mcrun --showcfg=resourcedir" MCXRUN_REDIR;
   else
-    cmd = "mxrun --showcfg=resourcedir" MCXRUN_REDIR;
+    cmd = (char*) "mxrun --showcfg=resourcedir" MCXRUN_REDIR;
   fp = popen(cmd, "r");
   if ( !fp )
     return NULL;//cmd failed
@@ -139,6 +147,7 @@ query_mcxrun_for_resourcedir( void )
     return NULL;/*unexpected output*/
   }
 }
+
 
 char *
 get_sys_dir(void)
@@ -189,7 +198,7 @@ generic_open_file_search(char *name, FILE *(*try_open)(char *, char *))
   if(search_list != NULL)
   {
     liter = list_iterate(search_list);
-    while((dir = list_next(liter)))
+    while((dir = (char*) list_next(liter)))
     {
       f = (*try_open)(dir, name);
       if(f != NULL)
@@ -246,3 +255,5 @@ add_search_dir(char *name)
     search_list = list_create();
   list_add(search_list, name);
 }
+
+#endif
