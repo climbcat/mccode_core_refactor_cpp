@@ -70,7 +70,7 @@
 #line 22 "instrument.y"
 
 
-#define _GNU_SOURCE
+//#define _GNU_SOURCE
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -100,7 +100,10 @@ int yyerror(const char *s);
 List list_cat(List, List);
 Symtab symtab_cat(Symtab, Symtab);
 void run_command_to_add_search_dir(char * input);
-int metadata_construct_table(instr_ptr_t);
+
+// NOTE
+//int metadata_construct_table(instr_ptr_t);
+
 void metadata_assign_from_definition(List metadata);
 void metadata_assign_from_instance(List metadata);
 
@@ -1496,10 +1499,7 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
-
-      // TODO: is this a bison bug?
-      //yychar = yylex (&yylval);
-      yychar = yylex ();
+      yychar = yylex (&yylval);
     }
 
   if (yychar <= YYEOF)
@@ -1597,10 +1597,14 @@ yyreduce:
         c->set_par = (yyvsp[-13].parms).set;
         c->out_par = (yyvsp[-13].parms).out;
         c->metadata = list_create();
+
+        /*
         if (list_len((yyvsp[-12].metadata))) {
           metadata_assign_from_definition((yyvsp[-12].metadata));
           list_cat(c->metadata, (yyvsp[-12].metadata));
         }
+        */
+
         c->flag_noacc   = (yyvsp[-9].linenum);
         c->share_code   = (yyvsp[-8].ccode);
         c->uservar_code = (yyvsp[-7].ccode);
@@ -2331,10 +2335,17 @@ yyreduce:
 
         instrument_definition->metadata = list_create();
         if (verbose) fprintf(stderr, "Combine metadata blocks into table\n");
+
+
+        // NOTE: metadata
+        /*
         if (metadata_construct_table(instrument_definition)) {
           print_error(MCCODE_NAME ": Combining metadata blocks into table failed for %s\n", instr_current_filename);
           exit(1);
         }
+        */
+
+
         if (verbose) fprintf(stderr, "Processed %d metadata blocks\n", list_len(instrument_definition->metadata));
 
         /* Check instrument parameters for uniqueness */
@@ -2782,7 +2793,10 @@ yyreduce:
         comp->actuals= symtab_create();
         symtab_cat(comp->actuals, (yyvsp[0].actuals));
         symtab_cat(comp->actuals, comp_src->actuals);
-        comp->metadata = metadata_list_copy(comp_src->metadata);
+
+        // NOTE: metadata        
+        //comp->metadata = metadata_list_copy(comp_src->metadata);
+
         (yyval.instance) = comp;
       }
 #line 2786 "instrument.tab.c"
@@ -2803,7 +2817,10 @@ yyreduce:
         comp->jump   = comp_src->jump;
         comp->when   = comp_src->when;
         comp->actuals= comp_src->actuals;
-        comp->metadata = metadata_list_copy(comp_src->metadata);
+
+        // NOTE:
+        //comp->metadata = metadata_list_copy(comp_src->metadata);
+
         (yyval.instance) = comp;
       }
 #line 2807 "instrument.tab.c"
@@ -2823,7 +2840,9 @@ yyreduce:
         comp->jump   = list_create();
         comp->when   = NULL;
         comp->actuals= (yyvsp[0].actuals);
-        comp->metadata = metadata_list_copy(def->metadata);
+        
+        // NOTE:
+        //comp->metadata = metadata_list_copy(def->metadata);
         (yyval.instance) = comp;
       }
 #line 2827 "instrument.tab.c"
@@ -2956,12 +2975,16 @@ yyreduce:
 	}
         if (list_len((yyvsp[-1].jumps)))  comp->jump  = (yyvsp[-1].jumps);
 
+
+        // NOTE: metadata stuff
         /* one or more metadata statements -- the Component definition *can also* add to this list */
         /* So the list *was* created above and should not be re-created now! */
+        /*
         if (list_len((yyvsp[0].metadata))){
          metadata_assign_from_instance((yyvsp[0].metadata));
          list_cat(comp->metadata, (yyvsp[0].metadata));
         }
+        */
 
 
         // TODO: define debugn
@@ -4110,6 +4133,8 @@ print_usage(void)
   fprintf(stderr, "    them (.c -> .o) before assembling the program.\n");
   /* fixme: should use get_sys_dir here? And update the text? */
   fprintf(stderr, "  The default component search list is usually defined by the environment\n");
+
+  /*
   fprintf(stderr, "    variable '" MCCODE_LIBENV "' %s (default is "
   #if MCCODE_PROJECT == 1
     MCSTAS
@@ -4117,6 +4142,8 @@ print_usage(void)
     MCXTRACE
   #endif
   ") \n", getenv(MCCODE_LIBENV) ? getenv(MCCODE_LIBENV) : "");
+  */
+
   fprintf(stderr, "  Use 'run' to both run " MCCODE_NAME " and the C compiler.\n");
   fprintf(stderr, "  Use 'gui' to run the " MCCODE_NAME " GUI.\n");
   fprintf(stderr, "SEE ALSO: mcrun, mcplot, mcdisplay, mcresplot, mcstas2vitess, mcgui, mcformat, mcdoc\n");
@@ -4255,92 +4282,7 @@ parse_command_line(int argc, char *argv[])
 }
 
 
-int
-main(int argc, char *argv[])
-{
-  FILE *file;
-  int err;
-
-#ifdef MAC
-  argc = ccommand(&argv);
-#endif
-
-  yydebug = 0;      /* If 1, then bison gives verbose parser debug info. */
-
-  palloc(instrument_definition); /* Allocate instrument def. structure. */
-  /* init root instrument to NULL */
-  instrument_definition->formals   = NULL;
-  instrument_definition->name      = NULL;
-  instrument_definition->decls     = NULL;
-  instrument_definition->inits     = NULL;
-  instrument_definition->saves     = NULL;
-  instrument_definition->finals    = NULL;
-  instrument_definition->compmap   = NULL;
-  instrument_definition->groupmap  = NULL;
-  instrument_definition->complist  = NULL;
-  instrument_definition->grouplist = NULL;
-  instrument_definition->metadata  = NULL;
-  instrument_definition->has_included_instr=0;
-  comp_instances      = NULL;
-  comp_instances_list = NULL;
-  group_instances     = NULL;
-  group_instances_list= NULL;
-  parse_command_line(argc, argv);
-  if(!strcmp(instr_current_filename, "-"))
-  {
-    instrument_definition->source = str_dup("<stdin>");
-    file = fdopen(0, "r");  /* Lone '-' designates stdin. */
-  }
-  else
-  {
-    instrument_definition->source = str_dup(instr_current_filename);
-    file = fopen(instr_current_filename, "r");
-  }
-  if(file == NULL)
-    fatal_error(MCCODE_NAME ": Instrument definition file `%s' not found\n",
-    instr_current_filename);
-  instrument_definition->quoted_source =
-    str_quote(instrument_definition->source);
-  if (verbose) {
-    fprintf(stderr, MCCODE_NAME " version " MCCODE_VERSION "\n");
-    fprintf(stderr, "Analyzing file            %s\n", instrument_definition->quoted_source);
-  }
-  instr_current_line = 1;
-  lex_new_file(file);
-  read_components = symtab_create(); /* Create table of components. */
-  lib_instances   = symtab_create(); /* Create table of libraries. */
-  err = mc_yyparse();
-  if (err != 0 && !error_encountered) error_encountered++;
-  if(error_encountered != 0)
-  {
-    print_error(MCCODE_NAME ": %i Errors encountered during parse of %s.\n",
-      error_encountered, instr_current_filename);
-    if (verbose) {
-      fprintf(stderr, "Please check the usual grammar:\n");
-      fprintf(stderr, "DEFINE INSTRUMENT\n");
-      fprintf(stderr, "DECLARE\n");
-      fprintf(stderr, "INITIALIZE\n");
-      fprintf(stderr, "TRACE\n");
-      fprintf(stderr, "  {SPLIT} COMPONENT name = comp(parameters) {WHEN condition}\n");
-      fprintf(stderr, "  AT (...) [RELATIVE [reference|PREVIOUS] | ABSOLUTE]\n");
-      fprintf(stderr, "  {ROTATED {RELATIVE [reference|PREVIOUS] | ABSOLUTE} }\n");
-      fprintf(stderr, "  {GROUP group_name}\n");
-      fprintf(stderr, "  {EXTEND C_code}\n");
-      fprintf(stderr, "  {JUMP [reference|PREVIOUS|MYSELF|NEXT] [ITERATE number_of_times | WHEN condition]\n");
-      fprintf(stderr, "END\n");
-      fprintf(stderr, "as well as '%%{ ... %%}' blocks.\n\n");
-    }
-    exit(1);
-  }
-  fclose(file);
-
-  if (verbose) fprintf(stderr, "Starting to create C code %s\n", output_filename);
-  cogen(output_filename, instrument_definition);
-  if (verbose) fprintf(stderr, "Generated          C code %s from %s\n",
-                       output_filename, instrument_definition->source);
-  fprintf(stderr, "CFLAGS=%s\n", instrument_definition->dependency);
-  exit(0);
-}
+// NOTE: main was extracted 
 
 
 int

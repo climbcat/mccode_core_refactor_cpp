@@ -85,6 +85,8 @@
 #define FLAVOR_UPPER "TT"
 #define FLAVOR "tt"
 #define MCCODE_BUGREPORT "mcstas.org"
+#define TRUE 1
+#define FALSE 0
 
 
 // utils

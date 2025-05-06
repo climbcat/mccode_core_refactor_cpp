@@ -21,7 +21,7 @@
 *******************************************************************************/
 %{
 
-#define _GNU_SOURCE
+//#define _GNU_SOURCE
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -200,10 +200,16 @@ compdef:    "DEFINE" "COMPONENT" TOK_ID parameters metadata shell dependency noa
         c->set_par = $4.set;
         c->out_par = $4.out;
         c->metadata = list_create();
+
+
+        // NOTE: metadata was disabled
+        /*        
         if (list_len($5)) {
           metadata_assign_from_definition($5);
           list_cat(c->metadata, $5);
         }
+        */
+
         c->flag_noacc   = $8;
         c->share_code   = $9;
         c->uservar_code = $10;
@@ -2010,13 +2016,19 @@ print_usage(void)
   fprintf(stderr, "    them (.c -> .o) before assembling the program.\n");
   /* fixme: should use get_sys_dir here? And update the text? */
   fprintf(stderr, "  The default component search list is usually defined by the environment\n");
+  
+  // TODO: was this string important?
+  /*
   fprintf(stderr, "    variable '" MCCODE_LIBENV "' %s (default is "
+  
   #if MCCODE_PROJECT == 1
     MCSTAS
   #elif MCCODE_PROJECT == 2
     MCXTRACE
   #endif
   ") \n", getenv(MCCODE_LIBENV) ? getenv(MCCODE_LIBENV) : "");
+  */
+  
   fprintf(stderr, "  Use 'run' to both run " MCCODE_NAME " and the C compiler.\n");
   fprintf(stderr, "  Use 'gui' to run the " MCCODE_NAME " GUI.\n");
   fprintf(stderr, "SEE ALSO: mcrun, mcplot, mcdisplay, mcresplot, mcstas2vitess, mcgui, mcformat, mcdoc\n");

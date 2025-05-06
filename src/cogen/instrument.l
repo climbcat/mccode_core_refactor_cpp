@@ -375,13 +375,13 @@ METADATA      return TOK_METADATA;
 /* This flag is set when autoloading component definitions to make the lexer
    output the special initial token to switch the parser to restricted
    mode. */
-int parse_restricted = FALSE;
+int parse_restricted = 0;
 
 /* Prepare to run lexical analysis on new file. */
 void
 lex_new_file(FILE *file)
 {
-  parse_restricted = FALSE;
+  parse_restricted = 0;
   BEGIN(initial_token);
   yyrestart(file);
 }
