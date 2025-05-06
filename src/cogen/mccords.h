@@ -1,3 +1,7 @@
+#ifndef __MCCOORDS_H__
+#define __MCCOORDS_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -18,7 +22,25 @@
 *
 *******************************************************************************/
 
-#include "mccode.h"
+/*******************************************************************************
+* Definitions in coords.c
+*******************************************************************************/
+
+/* Type for coordinates. Public. */
+struct coords
+  {
+    double x,y,z;
+  };
+typedef struct coords Coords;
+struct coords_exp
+  {
+    CExp x,y,z;
+  };
+typedef struct coords_exp Coords_exp;
+
+/* Get all-zero coordinate. */
+Coords_exp coords_exp_origo(void);
+
 
 /*******************************************************************************
 * Since we use a lot of geometric calculations using Cartesian coordinates,
@@ -47,3 +69,6 @@ Coords_exp coords_exp_origo(void)
   c.z = exp_number("0.0");
   return c;
 }
+
+
+#endif

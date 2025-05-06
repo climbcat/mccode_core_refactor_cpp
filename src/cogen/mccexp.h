@@ -1,3 +1,8 @@
+#ifndef __MCCEXP_H__
+#define __MCCEXP_H__
+
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -21,7 +26,31 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "mccode.h"
+
+
+/*******************************************************************************
+* Definitions for cexp.c
+*******************************************************************************/
+
+/* Type for expressions. The implementation is private and values of this type
+   must only be accessed through the proper function calls. */
+typedef struct cexp *CExp;
+
+/* Extern functions defined in cexp.c */
+CExp exp_id(char *id);    /* Make normal identifier. */
+CExp exp_extern_id(char *id); /* Make extern identifier. */
+CExp exp_number(char *n); /* Make expression from number. */
+CExp exp_string(char *s); /* Make expression from string. */
+CExp exp_ctoken(char *s); /* Make expression from generic C token */
+CExp exp_compound(int n, ...);  /* Make compound expression */
+void exp_free(CExp e);    /* Free memory for expression */
+char *exp_tostring(CExp e); /* Convert expression to string. */
+void exp_fprint(FILE *f, CExp e); /* Output an expression to file. */
+int exp_isvalue(CExp e);  /* Ask if expression is a value. */
+void exp_setlineno(CExp e, int n); /* Set line number of expression */
+int exp_getlineno(CExp e);  /* Get line number of expression, or zero */
+
+
 
 /* The internal structure implementing a C expression. */
 struct cexp
@@ -109,7 +138,7 @@ exp_ctoken(char *s)
 CExp
 exp_compound(int n, ...)
 {
-  char *result, *new;
+  char *result, *snew;
   CExp e;
   va_list ap;
   char *separator = "";		/* Token separator, initially empty */
@@ -119,9 +148,9 @@ exp_compound(int n, ...)
   while(n-- > 0)
   {
     e = va_arg(ap, CExp);
-    new = str_cat(result, separator, e->s, NULL);
+    snew = str_cat(result, separator, e->s, NULL);
     str_free(result);
-    result = new;
+    result = snew;
     separator = " ";		/* Now use space separator for rest. */
   }
   return mknonvalueexp(result);
@@ -134,14 +163,18 @@ exp_free(CExp e)
   memfree(e);
 }
 
+
 char *
 exp_tostring(CExp e)
 {
   char *s = e->s;
   if(s == NULL)
   {
+    assert(1 == 0 && "they said this was bad");
+    /*
     s = "";
     debugn((DEBUG_HIGH, "exp_tostring(): NULL cexp received.\n"));
+    */
   }
   return str_dup(s);
 }
@@ -169,3 +202,6 @@ exp_getlineno(CExp e)
 {
   return e->lineno;
 }
+
+
+#endif

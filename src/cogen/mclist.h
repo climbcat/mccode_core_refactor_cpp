@@ -1,3 +1,7 @@
+#ifndef __MCLIST_H__
+#define __MCLIST_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -18,7 +22,34 @@
 *
 *******************************************************************************/
 
-#include "mccode.h"
+
+
+/*******************************************************************************
+* Definitions for list.c
+*******************************************************************************/
+
+
+// TODO: merge "mclist.h" with "mcmemory.h" to avoid these problems
+
+
+/* Abstract data type for lists. */
+//typedef struct List_header *List;
+//typedef struct List_position *List_handle;
+
+//List list_create(void);             /* Create list. */
+//void list_add(List, void *);        /* Add element at end. */
+//void* list_access(List, int);       /* Get element in list. */
+//void list_free(List, void (*)(void *)); /* Deallocate a list. */
+//int list_len(List l);               /* Get list length. */
+//List_handle list_iterate(List);     /* Prepare to traverse list. */
+//List_handle list_iterate_back(List);     /* Prepare to traverse list. */
+//void *list_next(List_handle);       /* Get next element in list. */
+//void *list_previous(List_handle);       /* Get previous element in list. */
+//void list_iterate_end(List_handle); /* End list traversal. */
+//int list_undef(List l);
+//List list_cat(List l1, List l2);
+//List list_copy(List, void * (*)(void *));
+
 
 
 /*******************************************************************************
@@ -28,11 +59,11 @@
 
 /* The implementation of lists. Simple version: fixed-size array. */
 struct List_header
-  {
+{
     int size;
     int maxsize;
     void **elements;
-  };
+};
 
 #define MAX_ELEMENTS 500000
 
@@ -234,3 +265,6 @@ List list_copy(List from, void * (*copier)(void *)){
   }
   return to;
 }
+
+
+#endif

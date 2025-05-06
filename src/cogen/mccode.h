@@ -1,3 +1,7 @@
+#ifndef __MCCODE_H__
+#define __MCCODE_H__
+
+
 /*******************************************************************************
 *
 * McCode, neutron/xray ray-tracing package
@@ -21,184 +25,67 @@
 *
 *******************************************************************************/
 
-#ifndef MCCODE_H
-#define MCCODE_H "$Revision$"
 
+// system
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 
-#include "port.h"
 
-#ifndef FALSE
-#define FALSE 0
-#endif
+// utils
+#include "mcmemory.h"
+#include "mclist.h"
+#include "mccexp.h"
+#include "mccords.h"
+#include "mcsymtab.h"
 
-#ifndef TRUE
-#define TRUE 1
+
+
+#ifndef MCCODE_H
+//#define MCCODE_H "$Revision$"
+#define MCCODE_H "0.1.0"
 #endif
 
 /* the version string is replaced when building distribution with mkdist */
 #ifndef MCCODE_STRING
-#define MCCODE_STRING "@MCCODE_STRING@"
+//#define MCCODE_STRING "@MCCODE_STRING@"
+#define MCCODE_STRING "TT_V0.1.0"
 #endif
 
 #ifndef MCCODE_DATE
-#define MCCODE_DATE "@MCCODE_DATE@"
+//#define MCCODE_DATE "@MCCODE_DATE@"
+#define MCCODE_DATE "Maj 5"
 #endif
 
 #ifndef MCCODE_VERSION
-#define MCCODE_VERSION "@MCCODE_VERSION@"
+//#define MCCODE_VERSION "@MCCODE_VERSION@"
+#define MCCODE_VERSION "TT_V0.1.0"
 #endif
 
 #ifndef MCCODE_NAME
-#define MCCODE_NAME "@MCCODE_NAME@"
+//#define MCCODE_NAME "@MCCODE_NAME@"
+#define MCCODE_NAME "TraceTool"
 #endif
 
 #ifndef MCCODE_PARTICLE
-#define MCCODE_PARTICLE "@MCCODE_PARTICLE@"
+//#define MCCODE_PARTICLE "@MCCODE_PARTICLE@"
+#define MCCODE_PARTICLE "Neutron"
 #endif
 
 #ifndef MCCODE_LIBENV
-#define MCCODE_LIBENV "@MCCODE_LIBENV@"
+//#define MCCODE_LIBENV "@MCCODE_LIBENV@"
+#define MCCODE_LIBENV "lnx"
 #endif
 
 #ifndef MCCODE_YEAR
-#define MCCODE_YEAR "@MCCODE_YEAR@"
+//#define MCCODE_YEAR "@MCCODE_YEAR@"
+#define MCCODE_YEAR "2025"
 #endif
 
 /* Stringification of defines - use mccode_xstr: */
 #define mccode_str(s) #s
 #define mccode_xstr(s) mccode_str(s)
 
-/*******************************************************************************
-* Functions defined in memory.c
-*******************************************************************************/
-
-typedef struct Pool_header *Pool;
-
-void *mem(size_t);        /* Allocate memory. */
-void memfree(void *);     /* Free memory. */
-char *str_dup(char *);    /* Allocate new copy of string. */
-char *str_dup_n(char *string, int n); /* Copies only first N chars. */
-char *str_cat(char *first, ...);/* Concatenate strings to allocated string. */
-char *str_quote(char *string);  /* Quote string for inclusion in C code */
-void str_free(char *);    /* Free memory for string. */
-
-Pool pool_create(void);   /* Create pool. */
-void pool_free(Pool p);   /* Free pool and associated memory. */
-void *pool_mem(Pool p, size_t size); /* Allocate memory in pool. */
-
-/* Allocate memory to a pointer. If p is a pointer to type t, palloc(p) will
-   make p point to dynamically allocated memory for one element of type
-   t. Used to dynamicaaly allocate structures, eg.
-   `struct S *p; palloc(p);'. */
-#define palloc(p) ((p) = mem(sizeof(*(p))))
-
-/* Allocate an array to a pointer. If p is a pointer to type t, nalloc(p, n)
-   will make p point to a dynamically allocated array with n elements of type
-   t. */
-#define nalloc(p, n) ((p) = mem((n)*sizeof(*(p))))
-
-
-/*******************************************************************************
-* Functions defined in symtab.c
-*******************************************************************************/
-
-/* Structure for symbol table entries, returned by symtab_lookup() and the
-   like.  */
-struct Symtab_entry
-  {
-    char *name;
-    void *val;
-  };
-
-/* Symbol table abstract data type. */
-typedef struct Symbol_table *Symtab;
-/* Abstract handle for symbol table traversals. */
-typedef struct Symtab_position *Symtab_handle;
-
-/* Create symbol table. */
-Symtab symtab_create(void);
-/* Lookup name in symbol table. */
-struct Symtab_entry *symtab_lookup(Symtab, char *);
-/* Add name to symbol table. */
-struct Symtab_entry *symtab_add(Symtab, char *, void *);
-/* Free memory for symbol table. */
-void symtab_free(Symtab, void (*)(void *));
-/* Prepare to traverse table (in no particular order). */
-Symtab_handle symtab_iterate(Symtab s);
-/* Get next entry in a traversal. */
-struct Symtab_entry *symtab_next(Symtab_handle sh);
-/* End a traversal. */
-void symtab_iterate_end(Symtab_handle sh);
-/* get previous symtab entry */
-struct Symtab_entry *symtab_previous(Symtab st, int index);
-
-
-/*******************************************************************************
-* Definitions for list.c
-*******************************************************************************/
-
-/* Abstract data type for lists. */
-typedef struct List_header *List;
-typedef struct List_position *List_handle;
-
-List list_create(void);             /* Create list. */
-void list_add(List, void *);        /* Add element at end. */
-void* list_access(List, int);       /* Get element in list. */
-void list_free(List, void (*)(void *)); /* Deallocate a list. */
-int list_len(List l);               /* Get list length. */
-List_handle list_iterate(List);     /* Prepare to traverse list. */
-List_handle list_iterate_back(List);     /* Prepare to traverse list. */
-void *list_next(List_handle);       /* Get next element in list. */
-void *list_previous(List_handle);       /* Get previous element in list. */
-void list_iterate_end(List_handle); /* End list traversal. */
-int list_undef(List l);
-List list_cat(List l1, List l2);
-List list_copy(List, void * (*)(void *));
-
-/*******************************************************************************
-* Definitions for cexp.c
-*******************************************************************************/
-
-/* Type for expressions. The implementation is private and values of this type
-   must only be accessed through the proper function calls. */
-typedef struct cexp *CExp;
-
-/* Extern functions defined in cexp.c */
-CExp exp_id(char *id);    /* Make normal identifier. */
-CExp exp_extern_id(char *id); /* Make extern identifier. */
-CExp exp_number(char *n); /* Make expression from number. */
-CExp exp_string(char *s); /* Make expression from string. */
-CExp exp_ctoken(char *s); /* Make expression from generic C token */
-CExp exp_compound(int n, ...);  /* Make compound expression */
-void exp_free(CExp e);    /* Free memory for expression */
-char *exp_tostring(CExp e); /* Convert expression to string. */
-void exp_fprint(FILE *f, CExp e); /* Output an expression to file. */
-int exp_isvalue(CExp e);  /* Ask if expression is a value. */
-void exp_setlineno(CExp e, int n); /* Set line number of expression */
-int exp_getlineno(CExp e);  /* Get line number of expression, or zero */
-
-
-/*******************************************************************************
-* Definitions in coords.c
-*******************************************************************************/
-
-/* Type for coordinates. Public. */
-struct coords
-  {
-    double x,y,z;
-  };
-typedef struct coords Coords;
-struct coords_exp
-  {
-    CExp x,y,z;
-  };
-typedef struct coords_exp Coords_exp;
-
-/* Get all-zero coordinate. */
-Coords_exp coords_exp_origo(void);
 
 
 /*******************************************************************************
@@ -354,12 +241,13 @@ void print_error(char *, ...);  /* Normal error messages. */
 void print_warn(int *flag, char *format, ...); /* Warning. */
 void fatal_error(char *, ...);  /* Report a fatal error and exit the program. */
 
+/*
 #ifdef DEBUG
 
-void debug_printf(char *, ...); /* Internal; use debug macro instead. */
-void debugn_printf(int, char *, ...); /* Internal; use debugn macro instead. */
+void debug_printf(char *, ...); /* Internal; use debug macro instead.
+void debugn_printf(int, char *, ...); /* Internal; use debugn macro instead.
 
-/*******************************************************************************
+//*******************************************************************************
 * Debugging information. When the preprosessor flag DEBUG is defined,
 * debugging messages are printed to stderr. This uses the 'debug' macro. A
 * statement of the form debug((format, ...)) (note the double parenthesis)
@@ -367,25 +255,25 @@ void debugn_printf(int, char *, ...); /* Internal; use debugn macro instead. */
 * printf-style when debigging is enabled. The macro 'debugn' takes an
 * additional argument LEVEL; a compile-time option can be used to select
 * output only up to a certain level.
-*******************************************************************************/
+*******************************************************************************
 
 #define debug(msg) debug_printf msg
 #define debugn(msg) debugn_printf msg
 
-/* 'Standard' debugging levels. */
-#define DEBUG_ALWAYS  0   /* Always shown (if debugging enabled). */
+/* 'Standard' debugging levels.
+#define DEBUG_ALWAYS  0   /* Always shown (if debugging enabled).
 #define DEBUG_HIGH   10
 #define DEBUG_MEDIUM 20
-#define DEBUG_LOW    30   /* Only shown at high debugging level. */
+#define DEBUG_LOW    30   /* Only shown at high debugging level.
 
 /*******************************************************************************
 * Macro used to change the current debugging level. Useful to enable
 * high-volume debugging output in a specific part of the program.
-*******************************************************************************/
+******************************************************************************
 extern int debug_current_level;
 #define debug_level(n) (debug_current_level = (n))
 
-#else  /* !defined(DEBUG) */
+#else  /* !defined(DEBUG) 
 
 #define debug(msg)
 #define debugn(msg)
@@ -395,7 +283,10 @@ extern int debug_current_level;
 #define DEBUG_LOW
 #define debug_level(n)
 
-#endif /* !defined(DEBUG) */
+
+#endif /* !defined(DEBUG)
+
+*/
 
 
 /*******************************************************************************
@@ -574,4 +465,5 @@ Symtab metadata_separate_by_source(List metadata, int source_type);
 struct metadata_struct * metadata_copy(struct metadata_struct *);
 List metadata_list_copy(List from);
 
-#endif /* MCCODE_H */
+
+#endif

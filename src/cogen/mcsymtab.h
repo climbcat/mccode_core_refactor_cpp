@@ -1,3 +1,7 @@
+#ifndef __MCSYMTAB_H__
+#define __MCSYMTAB_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -20,7 +24,41 @@
 
 #include <string.h>
 
-#include "mccode.h"
+
+/*******************************************************************************
+* Functions defined in symtab.c
+*******************************************************************************/
+
+/* Structure for symbol table entries, returned by symtab_lookup() and the
+   like.  */
+struct Symtab_entry
+  {
+    char *name;
+    void *val;
+  };
+
+/* Symbol table abstract data type. */
+typedef struct Symbol_table *Symtab;
+/* Abstract handle for symbol table traversals. */
+typedef struct Symtab_position *Symtab_handle;
+
+/* Create symbol table. */
+Symtab symtab_create(void);
+/* Lookup name in symbol table. */
+struct Symtab_entry *symtab_lookup(Symtab, char *);
+/* Add name to symbol table. */
+struct Symtab_entry *symtab_add(Symtab, char *, void *);
+/* Free memory for symbol table. */
+void symtab_free(Symtab, void (*)(void *));
+/* Prepare to traverse table (in no particular order). */
+Symtab_handle symtab_iterate(Symtab s);
+/* Get next entry in a traversal. */
+struct Symtab_entry *symtab_next(Symtab_handle sh);
+/* End a traversal. */
+void symtab_iterate_end(Symtab_handle sh);
+/* get previous symtab entry */
+struct Symtab_entry *symtab_previous(Symtab st, int index);
+
 
 
 /*******************************************************************************
@@ -109,8 +147,12 @@ symtab_add(Symtab st, char *name, void *value)
     if(!strcmp(name, st->entries[i].name))
     {
       /* Hmm ... adding an already present name. */
+      assert(1 == 0 && "this is supposedly bad");
+
+      /*
       debugn((DEBUG_MEDIUM, "add_to_symtab: name already exists: %s.\n", name));
       return &(st->entries[i]);
+      */
     }
   }
 
@@ -227,3 +269,5 @@ Symtab symtab_cat(Symtab st1, Symtab st2)
   return(st1);
 }
 
+
+#endif
