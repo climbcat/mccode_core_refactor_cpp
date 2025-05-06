@@ -55,7 +55,7 @@
 #define YYSKELETON_NAME "yacc.c"
 
 /* Pure parsers.  */
-#define YYPURE 1
+#define YYPURE 2
 
 /* Push parsers.  */
 #define YYPUSH 0
@@ -1496,7 +1496,10 @@ yybackup:
   if (yychar == YYEMPTY)
     {
       YYDPRINTF ((stderr, "Reading a token\n"));
-      yychar = yylex (&yylval);
+
+      // TODO: is this a bison bug?
+      //yychar = yylex (&yylval);
+      yychar = yylex ();
     }
 
   if (yychar <= YYEOF)
