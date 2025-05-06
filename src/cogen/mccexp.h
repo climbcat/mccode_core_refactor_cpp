@@ -104,7 +104,7 @@ mknonvalueexp(char *s)
 CExp
 exp_id(char *id)  /* used in e.g. cogen:cogen_comp_init_par AND splits*/
 {
-  return mkvalueexp(str_cat("_instrument_var._parameters.", id, NULL));
+  return mkvalueexp(str_cat( (char*) "_instrument_var._parameters.", id, NULL));
 }
 
 CExp
@@ -124,7 +124,7 @@ exp_string(char *s)
 {
   char *quoted, *result;
   quoted = str_quote(s);
-  result =  str_cat("\"", s, "\"", NULL);
+  result =  str_cat((char*) "\"", s, (char*) "\"", NULL);
   str_free(quoted);
   return mkvalueexp(result);
 }
@@ -141,17 +141,17 @@ exp_compound(int n, ...)
   char *result, *snew;
   CExp e;
   va_list ap;
-  char *separator = "";		/* Token separator, initially empty */
+  char *separator = (char*) "";		/* Token separator, initially empty */
 
   va_start(ap, n);
-  result = str_dup("");
+  result = str_dup((char*) "");
   while(n-- > 0)
   {
     e = va_arg(ap, CExp);
     snew = str_cat(result, separator, e->s, NULL);
     str_free(result);
     result = snew;
-    separator = " ";		/* Now use space separator for rest. */
+    separator = (char*) " ";		/* Now use space separator for rest. */
   }
   return mknonvalueexp(result);
 }

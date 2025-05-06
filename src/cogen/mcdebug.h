@@ -1,3 +1,7 @@
+#ifndef __MC_DEBUG_H__
+#define __MC_DEBUG_H__
+
+
 /*******************************************************************************
 *
 * McStas, neutron ray-tracing package
@@ -21,7 +25,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "mccode.h"
 
 /*******************************************************************************
 * Error messages.
@@ -122,3 +125,6 @@ debugn_printf(int level, char *format, ...)
 }
 
 #endif /* DEBUG */
+
+
+#endif // mcdebug.h

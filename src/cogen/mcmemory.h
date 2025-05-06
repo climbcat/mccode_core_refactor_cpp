@@ -187,8 +187,8 @@ str_cat(char *first, ...)
 char *
 str_quote(char *string)
 {
-  char *badchars = "\\\"\r\n\t";
-  char *quotechars = "\\\"rnt";
+  char *badchars = (char*) "\\\"\r\n\t";
+  char *quotechars = (char*) "\\\"rnt";
   char *q=NULL, *res=NULL, *ptr;
   int len, pass;
   int c;

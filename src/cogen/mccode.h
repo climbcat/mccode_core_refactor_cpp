@@ -91,6 +91,7 @@
 #include "mccords.h"
 #include "mcsymtab.h"
 #include "mcfile.h"
+#include "mcdebug.h"
 
 
 // TODO: compile

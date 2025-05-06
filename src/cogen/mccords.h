@@ -64,9 +64,9 @@ Coords_exp coords_exp_origo(void)
 {
   Coords_exp c;
 
-  c.x = exp_number("0.0");
-  c.y = exp_number("0.0");
-  c.z = exp_number("0.0");
+  c.x = exp_number((char*) "0.0");
+  c.y = exp_number((char*) "0.0");
+  c.z = exp_number((char*) "0.0");
   return c;
 }
 
