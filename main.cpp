@@ -1,18 +1,13 @@
-//#include <cstdio>
-//#include <cstdint>
 #include <cassert>
-//#include <cstring>
 
 #include "src/cogen/mccode.h"
-
 #include "src/cogen/instrument.tab.h"
 #include "src/cogen/mccogen.h"
-
 #include "src/cogen/lex.yy.c"
 #include "src/cogen/instrument.tab.c"
 
 
-void RunProgram(int argc, char **argv) {
+int main (int argc, char **argv) {
     FILE *file;
     int err;
 
@@ -95,32 +90,3 @@ void RunProgram(int argc, char **argv) {
     }
     fprintf(stderr, "CFLAGS=%s\n", instrument_definition->dependency);
 }
-
-
-
-bool CLAContainsArg(const char *search, int argc, char **argv, int *idx = NULL) {
-    for (int i = 0; i < argc; ++i) {
-        char *arg = argv[i];
-        if (!strcmp(argv[i], search)) {
-            if (idx != NULL) {
-                *idx = i;
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-int main (int argc, char **argv) {
-    if (CLAContainsArg("--help", argc, argv) || CLAContainsArg("-h", argc, argv)) {
-        printf("--help:          display help (this text)\n");
-        printf("--test:          run essential test routines\n");
-    }
-    else if (CLAContainsArg("--test", argc, argv)) {
-        printf("There are no tests yet\n");
-    }
-    else {
-        RunProgram(argc, argv);
-    }
-}
-
