@@ -447,7 +447,7 @@ comp_iformals1:   comp_iformal
 comp_iformal:  TOK_ID TOK_ID
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -471,7 +471,7 @@ comp_iformal:  TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         if(!strcmp($1, "char")) {
           formal->type = instr_type_string;
         } else if(!strcmp($1, "double")) {
@@ -489,7 +489,7 @@ comp_iformal:  TOK_ID TOK_ID
     | TOK_ID
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         formal->id = str_dup($1);
         formal->isoptional = 0; /* No default value */
         formal->type = instr_type_double;
@@ -498,7 +498,7 @@ comp_iformal:  TOK_ID TOK_ID
     | TOK_ID '=' exp
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         formal->id = $1;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $3;
@@ -508,7 +508,7 @@ comp_iformal:  TOK_ID TOK_ID
     | TOK_ID TOK_ID '=' exp
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -532,7 +532,7 @@ comp_iformal:  TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID '=' exp
       {
         struct comp_iformal *formal;
-        palloc(formal);
+        formal = (comp_iformal*) palloc(formal);
         formal->id = $3;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $5;
@@ -827,7 +827,7 @@ instr_formals1:   instr_formal
 instr_formal:   TOK_ID TOK_ID
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -846,7 +846,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "char")) {
           formal->type = instr_type_string;
         } else if(!strcmp($1, "double")) {
@@ -863,7 +863,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID  /* Default type is "double" */
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->type = instr_type_double;
         formal->id = $1;
         formal->isoptional = 0; /* No default value */
@@ -873,7 +873,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->id = $1;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $3;
@@ -884,7 +884,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID TOK_ID '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -905,7 +905,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->id = $3;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $5;
@@ -924,7 +924,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID TOK_ID '/' TOK_STRING
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -944,7 +944,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID '/' TOK_STRING
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "char")) {
           formal->type = instr_type_string;
         } else if(!strcmp($1, "double")) {
@@ -962,7 +962,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '/' TOK_STRING
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->type = instr_type_double;
         formal->id = $1;
         formal->isoptional = 0; /* No default value */
@@ -973,7 +973,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '/' TOK_STRING '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->id = $1;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $5; //$6;
@@ -985,7 +985,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID TOK_ID '/' TOK_STRING  '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         if(!strcmp($1, "double")) {
           formal->type = instr_type_double;
         } else if(!strcmp($1, "int")) {
@@ -1007,7 +1007,7 @@ instr_formal:   TOK_ID TOK_ID
     | TOK_ID '*' TOK_ID '/' TOK_STRING '=' exp
       {
         struct instr_formal *formal;
-        palloc(formal);
+        formal = (instr_formal*) palloc(formal);
         formal->id = $3;
         formal->isoptional = 1; /* Default value available */
         formal->default_value = $7; // $8;
@@ -1139,7 +1139,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
         struct comp_inst *comp_src;
         struct comp_inst *comp;
         comp_src = $3;
-        palloc(comp);
+        comp = (comp_inst*) palloc(comp);
         comp->def    = comp_src->def;
         comp->extend = comp_src->extend;
         comp->group  = comp_src->group;
@@ -1157,7 +1157,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
         struct comp_inst *comp_src;
         struct comp_inst *comp;
         comp_src = $3;
-        palloc(comp);
+        comp = (comp_inst*) palloc(comp);
         comp->defpar = comp_src->defpar;
         comp->setpar = comp_src->setpar;
         comp->def    = comp_src->def;
@@ -1173,7 +1173,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
       {
         struct comp_def *def;
         struct comp_inst *comp;
-        def = read_component($1);
+        comp = (comp_def*) def = read_component($1);
 
         palloc(comp);
         comp->def          = def;
@@ -1242,7 +1242,7 @@ component: removable cpuonly split "COMPONENT" instname '=' instref
 
         if ($9) comp->when  = $9;
 
-        palloc(comp->pos);
+        comp->pos = (comp_position*) palloc(comp->pos);
         comp->pos->place           = $10.place;
         comp->pos->place_rel       = $10.place_rel;
         comp->pos->orientation     = $11.orientation;
@@ -1426,7 +1426,7 @@ groupdef:   TOK_ID
         ent = symtab_lookup(group_instances, $1);
         if(ent == NULL)
         {
-          palloc(group);    /* create new group instance */
+          group = (group_inst*) palloc(group);    /* create new group instance */
           group->name       = $1;
           group->index      = 0;
           group->first_comp = NULL;
@@ -1528,7 +1528,7 @@ metadatum:
 "METADATA" TOK_ID TOK_ID codeblock
 {
   struct metadata_struct * metadatum;
-  palloc(metadatum);
+  metadatum = (metadata_struct*) palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
   metadatum->name = str_dup($3);
@@ -1539,7 +1539,7 @@ metadatum:
 "METADATA" TOK_ID TOK_STRING codeblock
 {
   struct metadata_struct * metadatum;
-  palloc(metadatum);
+  metadatum = (metadata_struct*) palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
   char * tmp_key = (char*) malloc(((strlen($3)+3)*sizeof(char)));
@@ -1554,7 +1554,7 @@ metadatum:
 "METADATA" TOK_STRING TOK_ID codeblock
 {
   struct metadata_struct * metadatum;
-  palloc(metadatum);
+  metadatum = (metadata_struct*) palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
   metadatum->name = str_dup($3);
@@ -1565,7 +1565,7 @@ metadatum:
 "METADATA" TOK_STRING TOK_STRING codeblock
 {
   struct metadata_struct * metadatum;
-  palloc(metadatum);
+  metadatum = (metadata_struct*) palloc(metadatum);
   metadatum->source = NULL;
   metadatum->type = str_dup($2);
   char * tmp_key = (char*) malloc(((strlen($3)+3)*sizeof(char)));
@@ -1603,7 +1603,7 @@ jumps1: jump
 jump: "JUMP" jumpname jumpcondition
     {
       struct jump_struct *jump;
-      palloc(jump);
+      jump = (jump_struct*) palloc(jump);
       jump->target      =$2.name;
       jump->target_index=$2.index;
       jump->condition  = $3.condition;
@@ -2167,6 +2167,7 @@ parse_command_line(int argc, char *argv[])
 }
 
 
+/*
 int
 main(int argc, char *argv[])
 {
@@ -2177,10 +2178,10 @@ main(int argc, char *argv[])
   argc = ccommand(&argv);
 #endif
 
-  yydebug = 0;      /* If 1, then bison gives verbose parser debug info. */
+  yydebug = 0;      // If 1, then bison gives verbose parser debug info.
 
-  palloc(instrument_definition); /* Allocate instrument def. structure. */
-  /* init root instrument to NULL */
+  instrument_definition = (instr_def*) palloc(instrument_definition); // Allocate instrument def. structure.
+  // init root instrument to NULL
   instrument_definition->formals   = NULL;
   instrument_definition->name      = NULL;
   instrument_definition->decls     = NULL;
@@ -2201,7 +2202,7 @@ main(int argc, char *argv[])
   if(!strcmp(instr_current_filename, "-"))
   {
     instrument_definition->source = str_dup("<stdin>");
-    file = fdopen(0, "r");  /* Lone '-' designates stdin. */
+    file = fdopen(0, "r");  // Lone '-' designates stdin.
   }
   else
   {
@@ -2219,8 +2220,8 @@ main(int argc, char *argv[])
   }
   instr_current_line = 1;
   lex_new_file(file);
-  read_components = symtab_create(); /* Create table of components. */
-  lib_instances   = symtab_create(); /* Create table of libraries. */
+  read_components = symtab_create(); // Create table of components.
+  lib_instances   = symtab_create(); // Create table of libraries.
   err = mc_yyparse();
   if (err != 0 && !error_encountered) error_encountered++;
   if(error_encountered != 0)
@@ -2253,6 +2254,7 @@ main(int argc, char *argv[])
   fprintf(stderr, "CFLAGS=%s\n", instrument_definition->dependency);
   exit(0);
 }
+*/ // main()
 
 
 int
