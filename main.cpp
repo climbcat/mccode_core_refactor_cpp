@@ -34,7 +34,7 @@ int main (int argc, char **argv) {
     parse_command_line(argc, argv);
     if(!strcmp(instr_current_filename, "-"))
     {
-        instrument_definition->source = str_dup("<stdin>");
+        instrument_definition->source = str_dup((char*) "<stdin>");
         file = fdopen(0, "r");  // Lone '-' designates stdin.
     }
     else

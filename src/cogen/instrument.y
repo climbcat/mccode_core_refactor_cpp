@@ -782,11 +782,14 @@ instrument:   "DEFINE" "INSTRUMENT" TOK_ID instrpar_list
 
         instrument_definition->metadata = list_create();
         if (verbose) fprintf(stderr, "Combine metadata blocks into table\n");
-        if (metadata_construct_table(instrument_definition)) {
-          print_error(MCCODE_NAME ": Combining metadata blocks into table failed for %s\n", instr_current_filename);
-          exit(1);
-        }
-        if (verbose) fprintf(stderr, "Processed %d metadata blocks\n", list_len(instrument_definition->metadata));
+
+
+        // NOTE: metadata was disabled
+        //if (metadata_construct_table(instrument_definition)) {
+        //  print_error(MCCODE_NAME ": Combining metadata blocks into table failed for %s\n", instr_current_filename);
+        //  exit(1);
+        //}
+        //if (verbose) fprintf(stderr, "Processed %d metadata blocks\n", list_len(instrument_definition->metadata));
 
         /* Check instrument parameters for uniqueness */
         check_instrument_formals(instrument_definition->formals, instrument_definition->name);
@@ -1149,7 +1152,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
         comp->actuals= symtab_create();
         symtab_cat(comp->actuals, $5);
         symtab_cat(comp->actuals, comp_src->actuals);
-        comp->metadata = metadata_list_copy(comp_src->metadata);
+        //comp->metadata = metadata_list_copy(comp_src->metadata);
         $$ = comp;
       }
     | "COPY" '(' compref ')'
@@ -1166,7 +1169,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
         comp->jump   = comp_src->jump;
         comp->when   = comp_src->when;
         comp->actuals= comp_src->actuals;
-        comp->metadata = metadata_list_copy(comp_src->metadata);
+        //comp->metadata = metadata_list_copy(comp_src->metadata);
         $$ = comp;
       }
     | TOK_ID actuallist /* define new instance with def+set parameters */
@@ -1182,7 +1185,7 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
         comp->jump   = list_create();
         comp->when   = NULL;
         comp->actuals= $2;
-        comp->metadata = metadata_list_copy(def->metadata);
+        //comp->metadata = metadata_list_copy(def->metadata);
         $$ = comp;
       }
 ;
