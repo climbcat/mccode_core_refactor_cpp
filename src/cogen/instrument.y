@@ -64,7 +64,7 @@ void metadata_assign_from_instance(List metadata);
 // a) bison v < 3
 // %pure-parser
 // b) bison v >= 3
-%define api.pure full
+//%define api.pure
 %define parse.trace
 
 /*******************************************************************************

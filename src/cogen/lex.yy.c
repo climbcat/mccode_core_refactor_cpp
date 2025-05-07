@@ -806,9 +806,9 @@ char *yytext;
 #include "mccode.h"
 #include "instrument.tab.h"
 
-/* Fix things for bison option %pure_parser. */
-#define YY_DECL int yylex(YYSTYPE *yylvalp)
-#define yylval (*yylvalp)
+// NOTE: disabled pure option
+//#define YY_DECL int yylex(YYSTYPE *yylvalp)
+//#define yylval (*yylvalp)
 
 
 /* Structure to hold the state of a file being parsed. */
