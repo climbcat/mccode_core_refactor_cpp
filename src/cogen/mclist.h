@@ -85,10 +85,10 @@ list_create(void)
 {
   List l;
 
-  palloc(l);
+  l = (List) palloc(l);
   l->size = 0;
   l->maxsize = MAX_ELEMENTS;
-  nalloc(l->elements, l->maxsize);
+  l->elements = (void**) nalloc(l->elements, l->maxsize);
   return l;
 }
 
@@ -152,7 +152,7 @@ list_iterate(List l)
 {
   List_handle lh;
 
-  palloc(lh);
+  lh = (List_handle) palloc(lh);
   lh->list = l;
   lh->index = 0;
   return lh;
@@ -166,7 +166,7 @@ list_iterate_back(List l)
 {
   List_handle lh;
 
-  palloc(lh);
+  lh = (List_handle) palloc(lh);
   lh->list = l;
   lh->index = l->size-1;
   return lh;

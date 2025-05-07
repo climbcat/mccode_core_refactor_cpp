@@ -1,5 +1,5 @@
 
-#line 3 "lex.yy.c"
+//#line 3 "lex.yy.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -767,7 +767,7 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "instrument.l"
+//#line 1 "instrument.l"
 /* In Emacs, please make this -*-c-*- mode. Thanks. */
 /*******************************************************************************
 *
@@ -790,7 +790,7 @@ char *yytext;
 *******************************************************************************/
 /* Definition section. */
 /* Do not use the `yywrap feature' - only scan a single file (see Flex manual). */
-#line 31 "instrument.l"
+//#line 31 "instrument.l"
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
@@ -829,7 +829,7 @@ static char *switch_line = NULL;
 
 static void push_include(char *name);
 
-#line 833 "lex.yy.c"
+//#line 833 "lex.yy.c"
 /* Lexer states. */
 /* The state ccomment is used for scanning c-style comments. The state ccode
    is used when scanning embedded C code blocks. */
@@ -845,7 +845,7 @@ static void push_include(char *name);
 /* Get file name in %include within C code blocks. */
 
 /* Abbreviations. */
-#line 849 "lex.yy.c"
+//#line 849 "lex.yy.c"
 
 
 // NOTE: can we alter this in instrument.l ???
@@ -1081,13 +1081,13 @@ YY_DECL
 		}
 
 	{
-#line 104 "instrument.l"
+//#line 104 "instrument.l"
 
 
-#line 107 "instrument.l"
+//#line 107 "instrument.l"
  /* Initially, output a single token to the parser to tell it whether to parse
     general instrument definitions or autoloaded component definitions. */
-#line 1078 "lex.yy.c"
+//#line 1078 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1146,10 +1146,10 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 /* rule 1 can match eol */
-#line 110 "instrument.l"
+//#line 110 "instrument.l"
 YY_RULE_SETUP
 case YY_STATE_EOF(initial_token):
-#line 110 "instrument.l"
+//#line 110 "instrument.l"
 {
       yyless(0);
       BEGIN(INITIAL);
@@ -1158,239 +1158,239 @@ case YY_STATE_EOF(initial_token):
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 116 "instrument.l"
+//#line 116 "instrument.l"
 return TOK_ABSOLUTE;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 117 "instrument.l"
+//#line 117 "instrument.l"
 return TOK_AT;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 118 "instrument.l"
+//#line 118 "instrument.l"
 return TOK_COMPONENT;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 119 "instrument.l"
+//#line 119 "instrument.l"
 return TOK_DECLARE;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 120 "instrument.l"
+//#line 120 "instrument.l"
 return TOK_USERVARS;
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 121 "instrument.l"
+//#line 121 "instrument.l"
 return TOK_DEFINE;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 122 "instrument.l"
+//#line 122 "instrument.l"
 return TOK_DEFINITION;
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 123 "instrument.l"
+//#line 123 "instrument.l"
 return TOK_END;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 124 "instrument.l"
+//#line 124 "instrument.l"
 return TOK_DISPLAY;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 125 "instrument.l"
+//#line 125 "instrument.l"
 return TOK_DISPLAY; /* DISPLAY is alias to MCDISPLAY */
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 126 "instrument.l"
+//#line 126 "instrument.l"
 return TOK_FINALLY;
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 127 "instrument.l"
+//#line 127 "instrument.l"
 return TOK_INITIALISE;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 128 "instrument.l"
+//#line 128 "instrument.l"
 return TOK_INITIALISE;  /* INITIALISE is alias to INITIALIZE */
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 129 "instrument.l"
+//#line 129 "instrument.l"
 return TOK_INSTRUMENT;
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 130 "instrument.l"
+//#line 130 "instrument.l"
 return TOK_PRIVATE;
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 131 "instrument.l"
+//#line 131 "instrument.l"
 return TOK_PRIVATE; /* PRIVATE is alias to OUTPUT */
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 132 "instrument.l"
+//#line 132 "instrument.l"
 return TOK_PARAMETERS;
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 133 "instrument.l"
+//#line 133 "instrument.l"
 return TOK_RELATIVE;
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 134 "instrument.l"
+//#line 134 "instrument.l"
 return TOK_ROTATED;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 135 "instrument.l"
+//#line 135 "instrument.l"
 return TOK_PREVIOUS;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 136 "instrument.l"
+//#line 136 "instrument.l"
 return TOK_SETTING;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 137 "instrument.l"
+//#line 137 "instrument.l"
 return TOK_STATE; /* obsolete -> error */
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 138 "instrument.l"
+//#line 138 "instrument.l"
 return TOK_POL;   /* obsolete -> error */
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 139 "instrument.l"
+//#line 139 "instrument.l"
 return TOK_TRACE;
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 140 "instrument.l"
+//#line 140 "instrument.l"
 return TOK_SHARE;
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 141 "instrument.l"
+//#line 141 "instrument.l"
 return TOK_EXTEND;
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 142 "instrument.l"
+//#line 142 "instrument.l"
 return TOK_GROUP;         /* extended McStas grammar */
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 143 "instrument.l"
+//#line 143 "instrument.l"
 return TOK_SAVE;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 144 "instrument.l"
+//#line 144 "instrument.l"
 return TOK_JUMP;          /* extended McStas grammar */
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 145 "instrument.l"
+//#line 145 "instrument.l"
 return TOK_WHEN;          /* extended McStas grammar */
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 146 "instrument.l"
+//#line 146 "instrument.l"
 return TOK_NEXT;          /* extended McStas grammar */
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 147 "instrument.l"
+//#line 147 "instrument.l"
 return TOK_ITERATE;       /* extended McStas grammar */
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 148 "instrument.l"
+//#line 148 "instrument.l"
 return TOK_MYSELF;        /* extended McStas grammar */
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 149 "instrument.l"
+//#line 149 "instrument.l"
 return TOK_COPY;          /* extended McStas grammar */
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 150 "instrument.l"
+//#line 150 "instrument.l"
 return TOK_SPLIT;         /* extended McStas grammar */
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 151 "instrument.l"
+//#line 151 "instrument.l"
 return TOK_REMOVABLE;     /* extended McStas grammar with include */
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 152 "instrument.l"
+//#line 152 "instrument.l"
 return TOK_CPUONLY;       /* extended McStas grammar with GPU-CPU support */
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 153 "instrument.l"
+//#line 153 "instrument.l"
 return TOK_NOACC; 
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 154 "instrument.l"
+//#line 154 "instrument.l"
 return TOK_DEPENDENCY;
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 155 "instrument.l"
+//#line 155 "instrument.l"
 return TOK_SHELL;         /* extended McStas grammar with SHELL commands pre-cogen */
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 156 "instrument.l"
+//#line 156 "instrument.l"
 return TOK_SEARCH;        /* additional Instrument/Component search directories */
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 157 "instrument.l"
+//#line 157 "instrument.l"
 return TOK_METADATA;
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 160 "instrument.l"
+//#line 160 "instrument.l"
 return yytext[0]; /* Punctuation. */
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 161 "instrument.l"
+//#line 161 "instrument.l"
 return yytext[0]; /* Operator. */
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 162 "instrument.l"
+//#line 162 "instrument.l"
 return yytext[0]; /* special name, unit separator */
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 164 "instrument.l"
+//#line 164 "instrument.l"
 yylval.number = str_dup(yytext); return TOK_NUMBER;
 	YY_BREAK
 /* Note: Since ID overlaps with NUMBER (eg. "2E3"), ID must come
     after NUMBER */
 case 48:
 YY_RULE_SETUP
-#line 167 "instrument.l"
+//#line 167 "instrument.l"
 yylval.string = str_dup(yytext); return TOK_ID;
 	YY_BREAK
 /* Scanning all other C tokens used in expressions for component
@@ -1401,7 +1401,7 @@ yylval.string = str_dup(yytext); return TOK_ID;
  */
 case 49:
 YY_RULE_SETUP
-#line 175 "instrument.l"
+//#line 175 "instrument.l"
 {
       yylval.string = str_dup(yytext);
       return TOK_CTOK;
@@ -1412,7 +1412,7 @@ YY_RULE_SETUP
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 183 "instrument.l"
+//#line 183 "instrument.l"
 {
       yylval.linenum = instr_current_line;
       instr_current_line++;
@@ -1423,7 +1423,7 @@ YY_RULE_SETUP
 case 51:
 /* rule 51 can match eol */
 YY_RULE_SETUP
-#line 189 "instrument.l"
+//#line 189 "instrument.l"
 {
       instr_current_line++;
       print_error("%%{ token not on a line by itself "
@@ -1437,14 +1437,14 @@ YY_RULE_SETUP
 case 52:
 /* rule 52 can match eol */
 YY_RULE_SETUP
-#line 199 "instrument.l"
+//#line 199 "instrument.l"
 instr_current_line++; BEGIN(INITIAL); return TOK_CODE_END;
 	YY_BREAK
 /* %} symbol surrounded by some unrelevant stuff */
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 201 "instrument.l"
+//#line 201 "instrument.l"
 {
         instr_current_line++;
         print_warn(NULL, "%%} terminator not on a line by itself "
@@ -1456,7 +1456,7 @@ YY_RULE_SETUP
 case 54:
 /* rule 54 can match eol */
 YY_RULE_SETUP
-#line 208 "instrument.l"
+//#line 208 "instrument.l"
 {
       yyless(0);  /* re-use the current line, but within cfullincl state */
       BEGIN(cfullincl);
@@ -1466,7 +1466,7 @@ YY_RULE_SETUP
 case 55:
 /* rule 55 can match eol */
 YY_RULE_SETUP
-#line 213 "instrument.l"
+//#line 213 "instrument.l"
 {
         instr_current_line++;
         yylval.string = str_dup(yytext);
@@ -1477,7 +1477,7 @@ YY_RULE_SETUP
 /* Quoted strings. Simple version: no escape sequences. */
 case 56:
 YY_RULE_SETUP
-#line 221 "instrument.l"
+//#line 221 "instrument.l"
 {
         yylval.string =
           str_dup_n(&yytext[1], strlen(yytext) - 2);
@@ -1487,7 +1487,7 @@ YY_RULE_SETUP
 /* Quoted strings with escape sequence (e.g Win32 path): preserve all chars */
 case 57:
 YY_RULE_SETUP
-#line 227 "instrument.l"
+//#line 227 "instrument.l"
 {
         yylval.string = str_dup_n(&yytext[1], strlen(yytext) - 2);
         return TOK_STRING;
@@ -1496,7 +1496,7 @@ YY_RULE_SETUP
 case 58:
 /* rule 58 can match eol */
 YY_RULE_SETUP
-#line 231 "instrument.l"
+//#line 231 "instrument.l"
 {
         print_error("Error: Unterminated string "
                     "on line %d of file '%s': %s.\n",
@@ -1507,27 +1507,27 @@ YY_RULE_SETUP
 case 59:
 /* rule 59 can match eol */
 YY_RULE_SETUP
-#line 238 "instrument.l"
+//#line 238 "instrument.l"
 instr_current_line++; /* Ignore comment. */
 	YY_BREAK
 case 60:
 /* rule 60 can match eol */
 YY_RULE_SETUP
-#line 239 "instrument.l"
+//#line 239 "instrument.l"
 instr_current_line++; /* Ignore comment. */
 	YY_BREAK
 /* Include files for McStas comp/instr (INITIAL state). */
 /* then next token is the file name */
 case 61:
 YY_RULE_SETUP
-#line 243 "instrument.l"
+//#line 243 "instrument.l"
 BEGIN(inclname);
 	YY_BREAK
 
 /* name ends with a quote char -> include as INITIAL state */
 case 62:
 YY_RULE_SETUP
-#line 246 "instrument.l"
+//#line 246 "instrument.l"
 {
         yytext[yyleng - 1] = '\0';
         BEGIN(INITIAL);
@@ -1539,7 +1539,7 @@ YY_RULE_SETUP
 case 63:
 /* rule 63 can match eol */
 YY_RULE_SETUP
-#line 253 "instrument.l"
+//#line 253 "instrument.l"
 {
         print_error("Error in %%include statement "
                     "on line %d of file '%s': %s.\n",
@@ -1552,14 +1552,14 @@ YY_RULE_SETUP
 /* next token is full line, regenerated by yyless(0) */
 case 64:
 YY_RULE_SETUP
-#line 262 "instrument.l"
+//#line 262 "instrument.l"
 BEGIN(cinclname);
 	YY_BREAK
 
 /* name ends with a quote char, with extension -> include as ccode state */
 case 65:
 YY_RULE_SETUP
-#line 265 "instrument.l"
+//#line 265 "instrument.l"
 {
         yytext[yyleng - 1] = '\0';
         BEGIN(ccode);
@@ -1573,7 +1573,7 @@ YY_RULE_SETUP
    */
 case 66:
 YY_RULE_SETUP
-#line 275 "instrument.l"
+//#line 275 "instrument.l"
 {
         char *tmp0, *tmp1;
         yytext[yyleng - 1] = '\0';
@@ -1607,7 +1607,7 @@ YY_RULE_SETUP
 case 67:
 /* rule 67 can match eol */
 YY_RULE_SETUP
-#line 304 "instrument.l"
+//#line 304 "instrument.l"
 {
         print_error("Error in %%include statement "
                     "on line %d of file '%s': %s.\n",
@@ -1620,58 +1620,58 @@ YY_RULE_SETUP
 case 68:
 /* rule 68 can match eol */
 YY_RULE_SETUP
-#line 313 "instrument.l"
+//#line 313 "instrument.l"
 instr_current_line++; /* Ignore comment. */
 	YY_BREAK
 /* C-style comments. */
 case 69:
 YY_RULE_SETUP
-#line 316 "instrument.l"
+//#line 316 "instrument.l"
 BEGIN(ccomment);
 	YY_BREAK
 
 case 70:
 YY_RULE_SETUP
-#line 318 "instrument.l"
+//#line 318 "instrument.l"
 /* Ignore comment. */
 	YY_BREAK
 case 71:
 /* rule 71 can match eol */
 YY_RULE_SETUP
-#line 319 "instrument.l"
+//#line 319 "instrument.l"
 instr_current_line++; /* Ignore comment. */
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 320 "instrument.l"
+//#line 320 "instrument.l"
 /* Ignore comment. */
 	YY_BREAK
 case 73:
 /* rule 73 can match eol */
 YY_RULE_SETUP
-#line 321 "instrument.l"
+//#line 321 "instrument.l"
 instr_current_line++; /* Ignore comment. */
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 322 "instrument.l"
+//#line 322 "instrument.l"
 BEGIN(INITIAL); /* End of comment. */
 	YY_BREAK
 
 case 75:
 YY_RULE_SETUP
-#line 325 "instrument.l"
+//#line 325 "instrument.l"
 /* Ignore whitespace. */
 	YY_BREAK
 case 76:
 /* rule 76 can match eol */
 YY_RULE_SETUP
-#line 326 "instrument.l"
+//#line 326 "instrument.l"
 instr_current_line++; /* Ignore whitespace. */
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(ccode):
-#line 328 "instrument.l"
+//#line 328 "instrument.l"
 {
       if(file_stack_ptr <= 0)
       {
@@ -1709,7 +1709,7 @@ case YY_STATE_EOF(ccode):
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 363 "instrument.l"
+//#line 363 "instrument.l"
 {
       print_error("Invalid character `%s' "
                   "on line %d of file '%s'.\n",
@@ -1719,10 +1719,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 372 "instrument.l"
+//#line 372 "instrument.l"
 ECHO;
 	YY_BREAK
-#line 1713 "lex.yy.c"
+//#line 1713 "lex.yy.c"
 case YY_STATE_EOF(ccomment):
 case YY_STATE_EOF(inclname):
 case YY_STATE_EOF(cfullincl):
@@ -2730,7 +2730,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 372 "instrument.l"
+//#line 372 "instrument.l"
 
 
 /* User code section. */

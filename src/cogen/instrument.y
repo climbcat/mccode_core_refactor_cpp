@@ -193,7 +193,7 @@ compdefs:   /* empty */
 compdef:    "DEFINE" "COMPONENT" TOK_ID parameters metadata shell dependency noacc share uservars declare initialize trace save finally display "END"
       {
         struct comp_def *c;
-        palloc(c);
+        c = (comp_def*) palloc(c);
         c->name = $3;
         c->source = str_quote(instr_current_filename);
         c->def_par = $4.def;

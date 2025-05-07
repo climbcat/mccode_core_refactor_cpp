@@ -66,7 +66,7 @@ static CExp
 mkvalueexp(char *s)
 {
   CExp e;
-  palloc(e);
+  e = (CExp) palloc(e);
   e->s = s;
   e->isvalue = 1;
   e->lineno = 0;		/* Initially no line number set */
@@ -78,7 +78,7 @@ static CExp
 mknonvalueexp(char *s)
 {
   CExp e;
-  palloc(e);
+  e = (CExp) palloc(e);
   e->s = s;
   e->isvalue = 0;
   e->lineno = 0;		/* Initially no line number set */

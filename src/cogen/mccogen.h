@@ -283,7 +283,7 @@ codeblock_new(void)
 {
   struct code_block *cb;
 
-  palloc(cb);
+  cb = (code_block*) palloc(cb);
   cb->filename = NULL;
   cb->quoted_filename = NULL;
   cb->linenum  = -1;

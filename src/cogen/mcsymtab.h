@@ -97,9 +97,9 @@ symtab_create(void)
 {
   Symtab st;
 
-  palloc(st);			/* Allocate new symbol table. */
+  st = (Symtab) palloc(st);			/* Allocate new symbol table. */
   st->maxsize = MAXSIZE;
-  nalloc(st->entries, st->maxsize); /* Allocate array for entries. */
+  st->entries = (Symtab_entry*) nalloc(st->entries, st->maxsize); /* Allocate array for entries. */
   st->size = 0;			/* Empty table. */
   return st;
 }
@@ -203,7 +203,7 @@ symtab_iterate(Symtab s)
 {
   Symtab_handle sh;
 
-  palloc(sh);
+  sh = (Symtab_handle) palloc(sh);
   sh->symtab = s;
   sh->index = 0;
   return sh;

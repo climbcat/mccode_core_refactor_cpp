@@ -111,7 +111,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 74 "instrument.y"
+//#line 74 "instrument.y"
 
   char *number;
   char *string;
@@ -138,7 +138,7 @@ union YYSTYPE
   struct metadata_struct   *metadatum;       /* one metadatum structure */
   List                     metadata;      /* list of metadatum structures */
 
-#line 142 "instrument.tab.h"
+//#line 142 "instrument.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
