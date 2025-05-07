@@ -1173,9 +1173,9 @@ instref: "COPY" '(' compref ')' actuallist /* make a copy of a previous instance
       {
         struct comp_def *def;
         struct comp_inst *comp;
-        comp = (comp_def*) def = read_component($1);
+        def = (comp_def*) read_component($1);
+        comp = (comp_inst*) palloc(comp);
 
-        palloc(comp);
         comp->def          = def;
         comp->extend = codeblock_new();
         comp->group  = NULL;
@@ -1300,10 +1300,10 @@ component: removable cpuonly split "COMPONENT" instname '=' instref
 
         /* one or more metadata statements -- the Component definition *can also* add to this list */
         /* So the list *was* created above and should not be re-created now! */
-        if (list_len($15)){
-         metadata_assign_from_instance($15);
-         list_cat(comp->metadata, $15);
-        }
+        //if (list_len($15)){
+        // metadata_assign_from_instance($15);
+        // list_cat(comp->metadata, $15);
+        //}
 
 
         // TODO: define debugn
