@@ -128,6 +128,10 @@ void memfree(void *p)
 char *
 str_dup(char *string)
 {
+  if (string == NULL) {
+    return NULL;
+  }
+
   char *s;
 
   s = (char*) mem(strlen(string) + 1);

@@ -2761,9 +2761,13 @@ yyreduce:
         comp->name  = (yyvsp[-2].string);
         comp->split = (yyvsp[-4].exp);
         comp->cpuonly = (yyvsp[-5].linenum);
-        if (!comp->cpuonly) {
-          comp->cpuonly = comp->def->flag_noacc;
-        }
+
+
+        // NOTE: cpu-only; this hack causes problems during parsing, with comp->def being NULL
+        //if (!comp->cpuonly) {
+        //  comp->cpuonly = comp->def->flag_noacc;
+        //}
+
         comp->removable = (yyvsp[-6].linenum);
         comp->index = ++comp_current_index;     /* index of comp instance */
         

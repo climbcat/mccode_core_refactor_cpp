@@ -119,6 +119,10 @@ list_add(List l, void *e)
 void
 list_free(List l, void (*freer)(void *))
 {
+  // never mind free, this also caused problems during parsing, free doesn't matter
+  return ;
+
+  /*
   int i;
 
   for(i = 0; i < l->size; i++)
@@ -127,6 +131,7 @@ list_free(List l, void (*freer)(void *))
   }
   memfree(l->elements);
   memfree(l);
+  */
 }
 
 

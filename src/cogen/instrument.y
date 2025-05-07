@@ -1226,12 +1226,14 @@ component: removable cpuonly split "COMPONENT" instname '=' instref
         comp->name  = $5;
         comp->split = $3;
         comp->cpuonly = $2;
+        
+        // NOTE: cpu-only; this hack causes problems during parsing, with comp->def being NULL
         if (!comp->cpuonly) {
-          comp->cpuonly = comp->def->flag_noacc;
+          //comp->cpuonly = comp->def->flag_noacc;
         }
         comp->removable = $1;
         comp->index = ++comp_current_index;     /* index of comp instance */
-        
+
         if(comp->def != NULL)
         {
           /* Check actual parameters against definition and
