@@ -3,5 +3,3 @@ project(tracetool VERSION 0.1.0)
 set(EXE_NAME ${PROJECT_NAME})
 
 add_executable(${EXE_NAME} main.cpp)
-
-

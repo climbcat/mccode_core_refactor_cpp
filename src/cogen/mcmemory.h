@@ -78,18 +78,18 @@ void *pool_mem(Pool p, size_t size); /* Allocate memory in pool. */
    t. Used to dynamicaaly allocate structures, eg.
    `struct S *p; palloc(p);'. */
 
-// TODO: replace palloc
+// TODO: fix every instance of memory allocation macro usage
 //#define palloc(p) ((p) = mem( sizeof(*(p))) )
-void palloc(void * p) {}
+#define palloc(p) (mem( sizeof(*(p)) ))
 
 
 /* Allocate an array to a pointer. If p is a pointer to type t, nalloc(p, n)
    will make p point to a dynamically allocated array with n elements of type
    t. */
 
-// TODO: replace palloc
+// TODO: fix every instance of memory allocation macro usage
 //#define nalloc(p, n) ((p) = mem( (n)*sizeof(*(p))) )
-void nalloc(void *p, int n) {}
+#define nalloc(p, n) (mem( (n)*sizeof(*(p)) ))
 
 
 // TODO: deal with these

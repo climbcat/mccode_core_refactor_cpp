@@ -1,7 +1,9 @@
-#include "lib/jg_baselayer.h"
+//#include <cstdio>
+//#include <cstdint>
+#include <cassert>
+//#include <cstring>
 
 #include "src/cogen/mccode.h"
-
 
 #include "src/cogen/instrument.tab.h"
 #include "src/cogen/mccogen.h"
@@ -10,15 +12,13 @@
 #include "src/cogen/instrument.tab.c"
 
 
-void RunProgram() {
-    TimeFunction;
-
+void RunProgram(int argc, char **argv) {
     FILE *file;
     int err;
 
     yydebug = 0;      // If 1, then bison gives verbose parser debug info.
 
-    palloc(instrument_definition); // Allocate instrument def. structure.
+    instrument_definition = (instr_def*) palloc(instrument_definition); // Allocate instrument def. structure.
     // init root instrument to NULL
     instrument_definition->formals   = NULL;
     instrument_definition->name      = NULL;
@@ -36,7 +36,7 @@ void RunProgram() {
     comp_instances_list = NULL;
     group_instances     = NULL;
     group_instances_list= NULL;
-    parse_command_line(g_argc, g_argv);
+    parse_command_line(argc, argv);
     if(!strcmp(instr_current_filename, "-"))
     {
         instrument_definition->source = str_dup("<stdin>");
@@ -97,9 +97,21 @@ void RunProgram() {
 }
 
 
-int main (int argc, char **argv) {
-    TimeProgram;
 
+bool CLAContainsArg(const char *search, int argc, char **argv, int *idx = NULL) {
+    for (int i = 0; i < argc; ++i) {
+        char *arg = argv[i];
+        if (!strcmp(argv[i], search)) {
+            if (idx != NULL) {
+                *idx = i;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+int main (int argc, char **argv) {
     if (CLAContainsArg("--help", argc, argv) || CLAContainsArg("-h", argc, argv)) {
         printf("--help:          display help (this text)\n");
         printf("--test:          run essential test routines\n");
@@ -108,8 +120,7 @@ int main (int argc, char **argv) {
         printf("There are no tests yet\n");
     }
     else {
-        InitBaselayer();
-        RunProgram();
+        RunProgram(argc, argv);
     }
 }
 

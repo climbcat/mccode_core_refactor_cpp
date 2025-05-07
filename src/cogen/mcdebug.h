@@ -42,6 +42,17 @@ print_error(char *format, ...)
   error_encountered++;
 }
 
+void
+print_error(const char *format, ...)
+{
+  va_list ap;
+
+  va_start(ap, format);
+  vfprintf(stderr, format, ap);
+  va_end(ap);
+  error_encountered++;
+}
+
 
 /* Print a warning message. May optionally take a pointer to a flag of type
  * int; this should be NULL or point to a variable that is initialized to
