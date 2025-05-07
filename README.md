@@ -18,3 +18,21 @@ Current status:
 - possibly: try one more time to generate for C++ with "bison --header instrument -LC++"
 
 - tldr: cogen core code was ported to C++, but the generated parser code faults. consequently, no experiments or efforts were done to port the simulation code code.
+
+Compiling:
+
+<pre>
+g++ main.cpp -o mcstas_pp</code>
+./mcstas_pp                                            # prints help text
+./mcstas_pp comps/examples/PSI/PSI_DMC/PSI_DMC.instr   # seg faults during parser step
+</pre>
+
+or 
+
+<pre>
+mkdir build
+cd build
+cmake ..
+make
+</pre>
+
