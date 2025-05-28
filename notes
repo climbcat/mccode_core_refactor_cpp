@@ -1,0 +1,2 @@
+flex -i instrument.l (bygger lex.yy.c)
+bison -v -d instrument.y (bygger instrument.tab.h or instrument.tab.c)
